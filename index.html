@@ -505,6 +505,11 @@ body.locked{overflow:hidden;}
 @media(prefers-reduced-motion:reduce){#login-gate .lg-card{animation:none;}}
 </style>
 
+<style id="backup-layer">
+  .bk-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:6px 10px;cursor:pointer;transition:.2s;white-space:nowrap;line-height:1}
+  .bk-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 4px 14px rgba(79,70,229,.18);transform:translateY(-1px)}
+  @media(max-width:760px){.bk-btn{padding:6px 8px;font-size:11px}}
+</style>
 </head>
 <body>
 
@@ -540,6 +545,9 @@ body.locked{overflow:hidden;}
       <div class="top-actions">
         <button class="icon-btn" title="通知">🔔</button>
         <button class="icon-btn" onclick="toggleTheme()" title="切换深/浅色">🌓</button>
+        <button class="bk-btn" onclick="exportBackup()" title="导出全部数据为 JSON 备份">⤓ 导出</button>
+        <button class="bk-btn" onclick="document.getElementById('backupFileInput').click()" title="从备份文件恢复数据">⤒ 导入</button>
+        <input id="backupFileInput" type="file" accept=".json,application/json" hidden onchange="importBackup(this)">
       </div>
     </header>
     <main>
@@ -1640,5 +1648,61 @@ function sha256fb(s){
 })();
 </script>
 
+<script id="backup-js">
+/* ===== 数据备份层：导出全部 / 导入恢复（独立模块，零侵入原逻辑） ===== */
+(function(){
+  var BACKUP_KEYS=['mf_todo','mf_inbox','mf_inf_draft','mf_master','mf_materials','mf_materials_seeded','mf_delivery_doc','mf_hidden_infs','mf_replay','mf_experts'];
+  var APP='moyu-dashboard', VER=1;
+
+  function collect(){
+    var d={};
+    BACKUP_KEYS.forEach(function(k){var v=localStorage.getItem(k);if(v!==null)d[k]=v;});
+    return d;
+  }
+
+  window.exportBackup=function(){
+    try{
+      var data=collect();
+      var payload={app:APP,version:VER,exportedAt:new Date().toISOString(),keys:BACKUP_KEYS,data:data};
+      var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      var a=document.createElement('a');
+      var ts=new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+      a.href=URL.createObjectURL(blob);
+      a.download='moyu-backup-'+ts+'.json';
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){try{URL.revokeObjectURL(a.href);}catch(e){}},1000);
+      toast('已导出 '+Object.keys(data).length+' 项数据到本地文件');
+    }catch(e){toast('导出失败：'+e.message);}
+  };
+
+  window.importBackup=function(input){
+    var file=input.files&&input.files[0];
+    if(!file){return;}
+    var reader=new FileReader();
+    reader.onload=function(){
+      try{
+        var payload=JSON.parse(String(reader.result));
+        if(!payload||!payload.data||typeof payload.data!=='object'){toast('备份文件格式不正确');input.value='';return;}
+        var cnt=0; BACKUP_KEYS.forEach(function(k){if(k in payload.data)cnt++;});
+        /* 1) 先自动备份当前数据（应急可找回） */
+        var snap={app:APP,version:VER,exportedAt:new Date().toISOString(),keys:BACKUP_KEYS,data:collect(),_auto:true};
+        localStorage.setItem('mf_backup_autosnap',JSON.stringify(snap));
+        /* 2) 确认替换 */
+        if(!confirm('即将用备份覆盖当前数据（共 '+cnt+' 项）。\n已自动保存当前数据到应急备份（浏览器控制台可取回 mf_backup_autosnap）。\n确定继续替换？')){input.value='';return;}
+        /* 3) 替换（仅处理 10 个数据 key，登录会话 moyu_auth_v1 不动） */
+        BACKUP_KEYS.forEach(function(k){
+          if(k in payload.data){localStorage.setItem(k,payload.data[k]);}
+          else{localStorage.removeItem(k);} /* 备份中缺失的 key 复位为默认，保证与备份一致 */
+        });
+        toast('导入完成，正在刷新…');
+        setTimeout(function(){location.reload();},600);
+      }catch(e){toast('导入失败：'+e.message);}
+      input.value='';
+    };
+    reader.onerror=function(){toast('读取文件失败');input.value='';};
+    reader.readAsText(file);
+  };
+})();
+</script>
 </body>
 </html>
