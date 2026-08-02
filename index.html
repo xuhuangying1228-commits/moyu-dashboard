@@ -517,6 +517,61 @@ body.locked{overflow:hidden;}
   .bk-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 4px 14px rgba(79,70,229,.18);transform:translateY(-1px)}
   @media(max-width:760px){.bk-btn{padding:6px 8px;font-size:11px}}
 </style>
+<style id="ai-layer">
+#ai-settings{position:fixed;inset:0;z-index:2147483646;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(1000px 700px at 80% 10%, rgba(99,102,241,.28), transparent 60%), rgba(10,12,30,.86);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);overflow:auto;padding:24px}
+#ai-settings .ai-card{position:relative;width:min(560px,94vw);padding:30px 30px 26px;border-radius:22px;color:#e8eaf6;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 24px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.22)}
+#ai-settings h3{margin:0 0 4px;font-size:21px;font-weight:800;
+  background:linear-gradient(90deg,#a5b4fc,#c4b5fd,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+#ai-settings .ai-desc{font-size:13px;color:#a6add0;margin:0 0 18px}
+#ai-settings .ai-warn{font-size:12px;color:#fbbf24;background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.3);
+  border-radius:10px;padding:9px 12px;margin-bottom:16px;line-height:1.5}
+#ai-settings label{display:block;font-size:13px;color:#c7cbf0;margin:12px 0 6px;font-weight:600}
+#ai-settings .ai-in{width:100%;padding:11px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;box-sizing:border-box;transition:.2s}
+#ai-settings .ai-in::placeholder{color:rgba(230,234,246,.4)}
+#ai-settings .ai-in:focus{border-color:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,.22)}
+#ai-settings .ai-keywrap{position:relative}
+#ai-settings .ai-keywrap .ai-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;
+  font-size:13px;color:#a6add0;user-select:none}
+#ai-settings .ai-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+#ai-settings .ai-btn{flex:1;min-width:110px;padding:12px;border:none;border-radius:11px;cursor:pointer;font-size:14px;font-weight:700;color:#fff;transition:.25s}
+#ai-settings .ai-save{background:linear-gradient(90deg,#6366f1,#a855f7)}
+#ai-settings .ai-test{background:linear-gradient(90deg,#0ea5e9,#22d3ee)}
+#ai-settings .ai-clear{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22)}
+#ai-settings .ai-btn:hover{filter:brightness(1.08);box-shadow:0 8px 22px rgba(168,85,247,.3)}
+#ai-settings .ai-msg{font-size:13px;min-height:20px;margin-top:14px;font-weight:500;line-height:1.5}
+#ai-settings .ai-guide{font-size:12px;color:#9aa1c8;margin-top:16px;line-height:1.7;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+#ai-settings .ai-guide b{color:#c7cbf0}
+#ai-settings .ai-close{position:absolute;top:16px;right:18px;cursor:pointer;font-size:20px;color:#a6add0}
+#ai-fab{position:fixed;right:22px;bottom:22px;z-index:2147483645;width:56px;height:56px;border-radius:18px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;font-size:24px;box-shadow:0 12px 30px rgba(99,102,241,.5);
+  display:flex;align-items:center;justify-content:center;transition:.25s}
+#ai-fab:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(168,85,247,.6)}
+#ai-chat{position:fixed;right:22px;bottom:90px;z-index:2147483645;width:min(380px,92vw);height:min(560px,80vh);display:none;flex-direction:column;
+  border-radius:20px;overflow:hidden;color:#e8eaf6;
+  background:rgba(17,20,40,.92);border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 24px 70px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#ai-chat .ai-ch-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(90deg,rgba(99,102,241,.3),rgba(168,85,247,.3));border-bottom:1px solid rgba(255,255,255,.12)}
+#ai-chat .ai-ch-title{font-weight:700;font-size:15px}
+#ai-chat .ai-ch-close{cursor:pointer;font-size:18px;color:#d8dcf5}
+#ai-chat .ai-ch-body{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-bubble{max-width:85%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word;white-space:pre-wrap}
+.ai-bubble.user{align-self:flex-end;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;border-bottom-right-radius:4px}
+.ai-bubble.bot{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-bottom-left-radius:4px}
+.ai-bubble.sys{align-self:center;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);color:#fbbf24;font-size:12px;max-width:95%;text-align:center}
+#ai-chat .ai-ch-foot{padding:10px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:8px;align-items:flex-end}
+#ai-chat textarea{flex:1;resize:none;height:42px;max-height:120px;padding:10px 12px;border-radius:11px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;box-sizing:border-box;font-family:inherit}
+#ai-chat textarea:focus{border-color:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,.22)}
+#ai-chat .ai-send{padding:0 16px;height:42px;border:none;border-radius:11px;cursor:pointer;font-weight:700;color:#fff;
+  background:linear-gradient(90deg,#6366f1,#a855f7)}
+#ai-chat .ai-send:disabled{opacity:.6;cursor:not-allowed}
+</style>
 </head>
 <body>
 
@@ -534,6 +589,55 @@ body.locked{overflow:hidden;}
     </select>
     <button class="lg-btn" id="lg-btn">进入</button>
     <div class="lg-hint">🔒 已接入云端账号 · 数据可在多设备同步</div>
+  </div>
+</div>
+
+<!-- AI 助手：设置 modal -->
+<div id="ai-settings" style="display:none" onclick="if(event.target===this)aiClose()">
+  <div class="ai-card">
+    <span class="ai-close" onclick="aiClose()">✕</span>
+    <h3>🤖 AI 助手设置</h3>
+    <p class="ai-desc">配置你自己的大模型接口（OpenAI 兼容）。配置仅保存在本机浏览器，只在你发起对话时发往你填写的官方地址。</p>
+    <div class="ai-warn">⚠️ 安全提醒：不要把 API Key 发到任何聊天、群聊或截图里。本页不会把你的 Key 上传到任何第三方服务，也绝不会在页面/日志中显示完整 Key。</div>
+    <label>① 平台名称（自定义，便于识别）</label>
+    <input class="ai-in" id="ai-platform" placeholder="例如：DeepSeek / Kimi / Qwen / 智谱 / 自建">
+    <label>② 模型名称</label>
+    <input class="ai-in" id="ai-model" placeholder="例如：deepseek-chat / moonshot-v1-8k / qwen-plus">
+    <label>③ API 地址（不含末尾 /chat/completions）</label>
+    <input class="ai-in" id="ai-base" placeholder="例如：https://api.deepseek.com">
+    <label>④ API Key</label>
+    <div class="ai-keywrap">
+      <input class="ai-in" id="ai-key" type="password" placeholder="粘贴你的 API Key（默认隐藏）" autocomplete="off" spellcheck="false">
+      <span class="ai-eye" onclick="aiToggleKey(this)">👁 显示</span>
+    </div>
+    <div class="ai-row">
+      <button class="ai-btn ai-save" onclick="aiSave()">保存配置</button>
+      <button class="ai-btn ai-test" onclick="aiTest()">测试连接</button>
+      <button class="ai-btn ai-clear" onclick="aiClear()">清除配置</button>
+    </div>
+    <div class="ai-msg" id="ai-msg"></div>
+    <div class="ai-guide">
+      <b>怎么开始：</b><br>
+      1. <b>去哪创建 Key</b>：到你选的平台官网控制台（如 DeepSeek → platform.deepseek.com/api_keys）创建一个 API Key 并复制。<br>
+      2. <b>每项填什么</b>：平台名随意；模型名填该平台提供的模型 ID；API 地址填该平台的 base URL（通常到域名根，不含路径）；Key 粘贴刚才复制的。<br>
+      3. <b>测试连接</b>：点「测试连接」，成功会提示 ✅；失败会说明原因（CORS / 鉴权 / 网络），按提示调整。<br>
+      4. <b>更换 / 删除</b>：重新填写后点「保存配置」即覆盖；点「清除配置」即删除本机 Key，聊天功能随即失效。<br>
+      <b>注意：</b>OpenAI 官方 api.openai.com 不允许网页直接连接（会被浏览器 CORS 拦截）。建议使用支持网页直连的 OpenAI 兼容平台（DeepSeek、Kimi、Qwen、智谱、硅基流动等），或自建代理。
+    </div>
+  </div>
+</div>
+
+<!-- AI 助手：浮动入口 + 聊天面板 -->
+<button id="ai-fab" onclick="aiToggleChat()" title="AI 助手">🤖</button>
+<div id="ai-chat">
+  <div class="ai-ch-head">
+    <span class="ai-ch-title">🤖 AI 助手</span>
+    <span class="ai-ch-close" onclick="aiToggleChat()">✕</span>
+  </div>
+  <div class="ai-ch-body" id="ai-body"></div>
+  <div class="ai-ch-foot">
+    <textarea id="ai-input" placeholder="问点什么…（Enter 发送，Shift+Enter 换行）" onkeydown="aiKey(event)"></textarea>
+    <button class="ai-send" id="ai-send" onclick="aiSend()">发送</button>
   </div>
 </div>
 
@@ -559,6 +663,7 @@ body.locked{overflow:hidden;}
         <button class="bk-btn" onclick="exportBackup()" title="导出全部数据为 JSON 备份">⤓ 导出</button>
         <button class="bk-btn" onclick="document.getElementById('backupFileInput').click()" title="从备份文件恢复数据">⤒ 导入</button>
         <input id="backupFileInput" type="file" accept=".json,application/json" hidden onchange="importBackup(this)">
+        <button class="bk-btn" onclick="aiOpen()" title="配置你自己的 AI 助手接口（API Key 仅存本机）">⚙ AI</button>
       </div>
     </header>
     <main>
@@ -1751,6 +1856,47 @@ function bindMatDrop(){
     };
     reader.onerror=function(){toast('读取文件失败');input.value='';};
     reader.readAsText(file);
+  };
+})();
+</script>
+<script id="ai-js">
+(function(){
+  'use strict';
+  var KEY='mf_ai_cfg';
+  function $(id){return document.getElementById(id);}
+  function getCfg(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
+  function maskKey(k){if(!k)return '';if(k.length<=8)return '••••';return k.slice(0,3)+'…'+k.slice(-4);}
+  function setMsg(t,ok){var m=$('ai-msg');if(!m)return;m.textContent=t;m.style.color=ok===true?'#34d399':(ok===false?'#fb7185':'#c7cbf0');}
+  window.aiOpen=function(){var c=getCfg();if(c){$('ai-platform').value=c.platform||'';$('ai-model').value=c.model||'';$('ai-base').value=c.apiBase||'';$('ai-key').value=c.apiKey||'';}else{$('ai-key').value='';}$('ai-msg').textContent='';$('ai-settings').style.display='flex';};
+  window.aiClose=function(){$('ai-settings').style.display='none';};
+  window.aiToggleKey=function(el){var i=$('ai-key');if(i.type==='password'){i.type='text';el.textContent='🙈 隐藏';}else{i.type='password';el.textContent='👁 显示';}};
+  window.aiSave=function(){var platform=$('ai-platform').value.trim();var model=$('ai-model').value.trim();var base=$('ai-base').value.trim();var key=$('ai-key').value.trim();
+    if(!model||!base||!key){setMsg('请填写：模型名称、API 地址、API Key（平台名称可留空）。',false);return;}
+    if(!/^https?:\/\//i.test(base)){setMsg('API 地址必须以 http:// 或 https:// 开头。',false);return;}
+    var cfg={platform:platform,model:model,apiBase:base.replace(/\/+$/,''),apiKey:key};
+    localStorage.setItem(KEY,JSON.stringify(cfg));
+    setMsg('✅ 已保存到本机浏览器（仅本地，不上云、不进备份）。Key：'+maskKey(key),true);
+  };
+  window.aiClear=function(){localStorage.removeItem(KEY);$('ai-platform').value='';$('ai-model').value='';$('ai-base').value='';$('ai-key').value='';setMsg('已清除本机配置。聊天功能将停用，直到重新保存。',true);};
+  window.aiTest=function(){var c=getCfg();if(!c||!c.apiBase||!c.apiKey||!c.model){setMsg('请先填写并保存配置，再测试。',false);return;}
+    setMsg('正在测试连接…',null);var btn=document.querySelector('#ai-settings .ai-test');if(btn)btn.disabled=true;
+    fetch(c.apiBase+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.apiKey},body:JSON.stringify({model:c.model,messages:[{role:'user',content:'ping'}],stream:false})})
+      .then(function(r){if(r.ok)return r.json().then(function(j){return {ok:true,j:j};});var code=r.status;return r.text().then(function(){return {ok:false,code:code};});})
+      .then(function(res){if(btn)btn.disabled=false;if(res.ok&&res.j&&res.j.choices){setMsg('✅ 连接成功，模型可调用。'+maskKey(c.apiKey),true);}else if(res.code===401){setMsg('❌ 鉴权失败（401）：API Key 无效或格式错误，请检查。',false);}else if(res.code===429){setMsg('❌ 请求过于频繁（429）：额度或限速问题，稍后重试。',false);}else if(res.code===0){setMsg('❌ 网络/CORS 错误：该平台可能不允许网页直接连接。建议换支持网页直连的平台，或自建代理。',false);}else{setMsg('❌ 连接失败（HTTP '+res.code+'）：请核对地址与模型名。',false);}})
+      .catch(function(){if(btn)btn.disabled=false;setMsg('❌ 网络错误或被浏览器拦截（CORS）。OpenAI 官方端点通常不可用；请改用支持网页直连的 OpenAI 兼容平台，或自建代理。',false);});
+  };
+  window.aiToggleChat=function(){var p=$('ai-chat');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(!open&&$('ai-body').childElementCount===0){var c=getCfg();var b=$('ai-body');var s=document.createElement('div');s.className='ai-bubble sys';s.textContent=c?('已加载配置（'+(c.platform||c.model)+'）。直接输入即可对话。'):'尚未配置 AI。点右上角「⚙ AI 设置」填写你的平台 API 信息后即可对话。';b.appendChild(s);}};
+  function addBubble(text,cls){var b=$('ai-body');var d=document.createElement('div');d.className='ai-bubble '+cls;d.textContent=text;b.appendChild(d);b.scrollTop=b.scrollHeight;return d;}
+  window.aiKey=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();aiSend();}};
+  window.aiSend=function(){var c=getCfg();if(!c||!c.apiBase||!c.apiKey||!c.model){addBubble('未配置 AI：请先点「⚙ AI 设置」保存配置。','sys');return;}
+    var ta=$('ai-input');var text=ta.value.trim();if(!text)return;ta.value='';addBubble(text,'user');
+    var sendBtn=$('ai-send');sendBtn.disabled=true;var loading=addBubble('思考中…','bot');
+    var msgs=[{role:'system',content:'你是摸鱼办事处项目指挥中枢的 AI 助手，帮助项目经理做任务梳理、文案建议与数据分析。回答简洁实用。'},{role:'user',content:text}];
+    fetch(c.apiBase+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.apiKey},body:JSON.stringify({model:c.model,messages:msgs,stream:false})})
+      .then(function(r){if(!r.ok){return r.text().then(function(){throw new Error('HTTP '+r.status);});}return r.json();})
+      .then(function(j){var ans=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'(空响应)';loading.textContent=ans;})
+      .catch(function(err){var m=String(err&&err.message||err);loading.textContent='❌ 请求失败：'+(m.indexOf('Failed')>=0?'网络/CORS 被拦截，或平台不允许网页直连。':'请检查配置。')+' 详情见设置页「测试连接」。';})
+      .finally(function(){sendBtn.disabled=false;var b=$('ai-body');b.scrollTop=b.scrollHeight;});
   };
 })();
 </script>
