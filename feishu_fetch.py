@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-拉取飞书多维表中达人的「主页链接 / 蒲公英链接 / 稿件链接」三列，
-按"达人昵称"字段匹配，输出 feishu_inf.json 供网页加载填格。
+拉取飞书多维表中达人的【全部字段】，按"达人昵称"字段作为主键，
+输出 feishu_inf.json 供网页把达人表完全由飞书驱动渲染（增删改全同步）。
 
 配置（通过环境变量，切勿硬编码密钥）：
   FEISHU_APP_ID      飞书自建应用 App ID（cli_ 开头）
@@ -21,7 +21,8 @@ import urllib.error
 APP_TOKEN = "TTmEb8JYhacQUIsMTNxchMMAnte"
 TABLE_ID = "tbl4MwhsLVskmCpl"
 NICK_FIELD = os.environ.get("FEISHU_NICK_FIELD", "小红书昵称")
-FIELDS = ["主页链接", "蒲公英链接", "稿件链接"]
+# 拉取全部字段（飞书表即达人数据唯一源头，增删改全同步）
+FIELDS = None  # None = 导出记录里的所有列
 
 
 def get_token():
@@ -98,7 +99,10 @@ def main():
         if not nick:
             skipped += 1
             continue
-        book[nick] = {k: norm(f.get(k)) for k in FIELDS}
+        if FIELDS is None:
+            book[nick] = {k: norm(v) for k, v in f.items() if k != NICK_FIELD}
+        else:
+            book[nick] = {k: norm(f.get(k)) for k in FIELDS}
     out = {
         "app_token": APP_TOKEN,
         "table_id": TABLE_ID,
