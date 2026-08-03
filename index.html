@@ -143,9 +143,9 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .inf-c-group{display:flex;align-items:center;gap:6px;padding:6px 8px !important;max-width:280px}
 .inf-c-group .grp-name{flex:1;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace}
 .inf-c-group .grp-copy{padding:3px 8px !important;font-size:11px !important;border-radius:6px;flex-shrink:0}
-.inf-c-act{white-space:nowrap;text-align:center;width:84px;padding:6px 4px !important}
+.inf-c-act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:88px;padding:8px 6px !important}
 .inf-c-act .inf-del{width:24px;height:24px;padding:0}
-.inf-c-act .btn-sm{padding:4px 10px !important;font-size:11px !important}
+.inf-c-act .btn-sm{padding:4px 10px !important;font-size:11px !important;line-height:1.2}
 .inf-row{border-bottom:1px solid var(--border)}
 .inf-row:last-child{border-bottom:none}
 .inf-row:hover{background:var(--surface2)}
@@ -156,7 +156,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .inf-act-btn:hover{transform:translateY(-1px)}
 .inf-edit-btn:hover{border-color:var(--accent);background:var(--accent-weak);box-shadow:0 2px 8px rgba(5,150,105,.12)}
 .inf-del-btn:hover{border-color:var(--danger);background:rgba(229,72,77,.06);box-shadow:0 2px 8px rgba(229,72,77,.12)}
-.inf-table td{padding:10px 12px;vertical-align:middle}
+.inf-table td{padding:12px 12px;vertical-align:middle}
 .inf-name{font-weight:700;font-size:14px;white-space:nowrap}
 .inf-sub{display:none}
 .inf-stage{display:block;font-size:11px;color:var(--muted);margin-top:4px}
@@ -1307,7 +1307,7 @@ function renderInf(){
     var tdAct=document.createElement('td'); tdAct.className='inf-c-act';
     var bDel=document.createElement('button'); bDel.className='inf-del'; bDel.title='隐藏该达人'; bDel.textContent='✕'; bDel.addEventListener('click',function(){delInf(nick);});
     var bInv=document.createElement('button'); bInv.className='btn-ghost btn-sm'; bInv.textContent='邀约'; bInv.addEventListener('click',function(){genInviteFromNick(nick);});
-    tdAct.appendChild(bDel); tdAct.appendChild(document.createTextNode(' ')); tdAct.appendChild(bInv);
+    tdAct.appendChild(bDel); tdAct.appendChild(bInv);
     tr.appendChild(tdAct);
     tb.appendChild(tr);
   });
