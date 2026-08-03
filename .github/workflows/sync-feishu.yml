@@ -28,14 +28,24 @@ jobs:
           FEISHU_NICK_FIELD: ${{ secrets.FEISHU_NICK_FIELD }}
         run: python feishu_fetch.py
 
-      - name: 提交并推送更新
+      - name: 提交并推送更新（防并发冲突）
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add feishu_inf.json
           if git diff --cached --quiet; then
             echo "无变化，跳过提交"
-          else
-            git commit -m "chore: 每日飞书同步 $(date +%F)"
-            git push
+            exit 0
           fi
+          git commit -m "chore: 每日飞书同步 $(date +%F)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash || true
+            if git push; then
+              echo "✅ 推送成功"
+              exit 0
+            fi
+            echo "第 $i 次推送被拒，3 秒后重试..."
+            sleep 3
+          done
+          echo "❌ 推送最终失败"
+          exit 1
