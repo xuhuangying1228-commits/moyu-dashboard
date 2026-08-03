@@ -126,8 +126,26 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .bar{width:60%;max-width:70px;background:var(--accent);border-radius:8px 8px 0 0;min-height:8px}
 .chart{width:100%;height:170px}
 .inf-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
-.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:1500px}
-.inf-table thead th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:11px 14px;border-bottom:2px solid var(--border);white-space:nowrap;z-index:2}
+.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:1300px;table-layout:fixed}
+.inf-table thead th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:11px 10px;border-bottom:2px solid var(--border);white-space:nowrap;z-index:2;overflow:hidden;text-overflow:ellipsis}
+.inf-table tbody tr.inf-row{border-bottom:1px solid var(--line,#eef0f3);transition:background .12s}
+.inf-table tbody tr.inf-row:hover{background:var(--surface2,#f6f7fa)}
+.inf-table th,.inf-table td{overflow:hidden;text-overflow:ellipsis}
+.inf-c-name{font-weight:600;color:var(--text);white-space:nowrap}
+.inf-c-linkcell{text-align:center;width:64px;padding:6px 4px !important}
+.inf-c-linkcell .cell-linkbtn{display:inline-block;padding:4px 10px;font-size:11px;border-radius:6px;background:var(--accent-weak,rgba(0,102,204,.08));color:var(--accent,#0066cc);text-decoration:none;border:1px solid transparent;transition:.12s;font-weight:500;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.inf-c-linkcell .cell-linkbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.inf-c-linkcell.inf-c-link-empty{color:var(--muted,#8a8f98);font-size:12px}
+.inf-input{width:100%;border:1px solid transparent;background:var(--surface2,#f6f7fa);font:inherit;color:var(--text);border-radius:6px;padding:5px 8px;box-sizing:border-box;transition:.12s;min-width:50px;height:28px;line-height:18px;font-size:12px}
+.inf-input:hover{border-color:var(--border)}
+.inf-input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 2px rgba(0,102,204,.12)}
+.inf-input[type=number]{text-align:right}
+.inf-c-group{display:flex;align-items:center;gap:6px;padding:6px 8px !important;max-width:280px}
+.inf-c-group .grp-name{flex:1;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace}
+.inf-c-group .grp-copy{padding:3px 8px !important;font-size:11px !important;border-radius:6px;flex-shrink:0}
+.inf-c-act{white-space:nowrap;text-align:center;width:84px;padding:6px 4px !important}
+.inf-c-act .inf-del{width:24px;height:24px;padding:0}
+.inf-c-act .btn-sm{padding:4px 10px !important;font-size:11px !important}
 .inf-row{border-bottom:1px solid var(--border)}
 .inf-row:last-child{border-bottom:none}
 .inf-row:hover{background:var(--surface2)}
@@ -923,7 +941,7 @@ body.locked{overflow:hidden;}
       <div class="sum-grid"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">在跟进达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--danger)">2</div><div class="sum-l">严重逾期</div></div><div class="sum-card"><div class="sum-v" style="color:var(--warn)">6</div><div class="sum-l">需关注</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥46645</div><div class="sum-l">报价合计</div></div></div>
       <!-- 飞书为唯一数据源，项目筛选暂隐（合作项目列补齐到飞书后可启用） -->
       <div class="inf-wrap"><table class="inf-table">
-        <thead><tr><th>达人昵称</th><th>主页链接</th><th>蒲公英链接</th><th>合作报价</th><th>合作项目</th><th>稿件链接</th><th>稿件进度</th><th>发布链接</th><th>返点比例</th><th>对接群名</th><th>备注</th><th>操作</th></tr></thead>
+        <thead><tr><th>达人昵称</th><th>主页</th><th>蒲公英</th><th>合作报价</th><th>所属项目</th><th>执行金额</th><th>返点%</th><th>回收</th><th>稿件</th><th>稿件进度</th><th>发布</th><th>对接群名</th><th>备注</th><th>操作</th></tr></thead>
         <tbody id="infBody"></tbody>
       </table></div>
     </section>
@@ -1018,14 +1036,16 @@ body.locked{overflow:hidden;}
           <div class="modal-step"><b>① 选择字段</b><span>默认全部勾选，按需取消</span></div>
           <div class="exp-cb-grid">
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="name" checked>达人昵称</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="home" checked>主页链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="pgy" checked>蒲公英链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="home" checked>主页</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="pgy" checked>蒲公英</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="price" checked>合作报价</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="project" checked>合作项目</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="draft" checked>稿件链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="proj" checked>所属项目</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="exec" checked>执行金额</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="rebate" checked>返点%</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="recv" checked>回收</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="draft" checked>稿件</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="stage" checked>稿件进度</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="publish" checked>发布链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="rebate" checked>返点比例</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="publish" checked>发布</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="group" checked>对接群名</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="note" checked>备注</label>
           </div>
@@ -1143,20 +1163,39 @@ function insertInfRow(nick, rec){
   if(typeof window.genGroup==='function')window.genGroup(nick);
 }
 // ===== 飞书驱动：达人明细表完全由飞书多维表渲染（增删改全同步）=====
+// 表头固定，按飞书字段名查找填充。type='input' 的列在工作台可编辑（落 localStorage），飞书没数据也能填；
+// type='autogroup' 的「对接群名」由 档期(MMDD) + 昵称 + 内容方向 + 笔记类型 自动拼，旁有「复制群名」按钮。
 var INF_SCHEMA=[
-  {key:'达人昵称', label:'达人昵称', type:'name'},
-  {key:'主页链接', label:'主页链接', type:'link'},
-  {key:'蒲公英链接', label:'蒲公英链接', type:'link'},
-  {key:'达人报价', label:'合作报价', type:'text'},
-  {key:'合作项目', label:'合作项目', type:'text'},
-  {key:'稿件链接', label:'稿件链接', type:'link'},
-  {key:'稿件进度', label:'稿件进度', type:'text'},
-  {key:'笔记链接', label:'发布链接', type:'link'},
-  {key:'返点比例', label:'返点比例', type:'text'},
-  {key:'对接群名', label:'对接群名', type:'text'},
-  {key:'备注', label:'备注', type:'text'}
+  {key:'__name__',   label:'达人昵称', type:'name'},
+  {key:'主页链接',    label:'主页',     type:'link'},
+  {key:'蒲公英链接',  label:'蒲公英',   type:'link'},
+  {key:'达人报价',    label:'合作报价', type:'text'},
+  {key:'合作项目',    label:'所属项目', type:'input', persistKey:'proj',   inputType:'text',   placeholder:'填项目名'},
+  {key:'__exec__',   label:'执行金额', type:'input', persistKey:'exec',   inputType:'number', placeholder:'¥'},
+  {key:'返点比例',    label:'返点%',   type:'input', persistKey:'rebate', inputType:'number', placeholder:'%'},
+  {key:'__recv__',   label:'回收',     type:'input', persistKey:'recv',   inputType:'text',   placeholder:'已/未/金额'},
+  {key:'稿件链接',    label:'稿件',     type:'link'},
+  {key:'稿件进度',    label:'稿件进度', type:'text'},
+  {key:'笔记链接',    label:'发布',     type:'link'},
+  {key:'__group__',  label:'对接群名', type:'autogroup'},
+  {key:'备注',        label:'备注',     type:'text'}
 ];
 window.INF={};
+// 本机覆盖：用户在工作台直接编辑的 4 个字段（所属项目/执行金额/返点%/回收），按达人昵称存
+var OV_KEY='moyu_inf_overrides_v1';
+function getOverrides(){try{return JSON.parse(localStorage.getItem(OV_KEY))||{};}catch(e){return{};}}
+function getOneOverride(nick,key){var o=getOverrides();return(o[nick]&&o[nick][key]!==undefined)?o[nick][key]:'';}
+function setOverride(nick,key,val){
+  var o=getOverrides(); o[nick]=o[nick]||{}; o[nick][key]=val;
+  // 同步给 INF_DATA，让 KPI/项目模块立即看到
+  var d=InfByNick(nick); if(d){
+    if(key==='exec')d.exec=parseFloat(val)||0;
+    else if(key==='rebate')d.rebate=parseFloat(val)||0;
+    else if(key==='recv')d.recv=val||'未回收';
+    else if(key==='proj'){d.projects=val?[val]:[];d.proj=val;}
+  }
+  try{localStorage.setItem(OV_KEY,JSON.stringify(o));}catch(e){}
+}
 function fmtInfDate(v){
   if(v===null||v===undefined||v==='')return '';
   var s=String(v).trim();
@@ -1166,17 +1205,42 @@ function fmtInfDate(v){
   }
   return s;
 }
+// 档期(支持 ms 时间戳 或 YYYY-MM-DD) → MMDD
+function fmtInfMMDD(v){
+  if(v===null||v===undefined||v==='')return '';
+  var s=String(v).trim();
+  var d=null;
+  if(/^\d{12,}$/.test(s))d=new Date(Number(s));
+  else if(/^\d{4}-\d{1,2}-\d{1,2}/.test(s))d=new Date(s);
+  if(d&&!isNaN(d.getTime())){var p=function(x){return x<10?'0'+x:x;};return p(d.getMonth()+1)+p(d.getDate());}
+  return '';
+}
+// 自动拼对接群名：【MMDD】-达人昵称-内容方向-笔记类型
+function genGroupName(f,nick){
+  var mmdd=f?fmtInfMMDD(f['发布档期']):'';
+  var dir=f?(f['内容方向']||''):'';
+  var nt=f?(f['笔记类型']||''):'';
+  return '【'+(mmdd||'档期待定')+'】-'+nick+'-'+dir+'-'+nt;
+}
 function getHiddenSet(){try{return new Set(JSON.parse(localStorage.getItem('mf_hidden_infs')||'[]'));}catch(e){return new Set();}}
 function rebuildInfData(){
   window.INF_DATA=[];
+  var ov=getOverrides();
   Object.keys(window.INF).forEach(function(nick){
     var f=window.INF[nick]||{};
+    var o=ov[nick]||{};
+    // 执行金额/返点/回收/项目 优先用本机覆盖，否则回退飞书烘焙值
+    var execNum=o.exec!==undefined&&o.exec!==''?parseFloat(o.exec):(parseFloat(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）'])||0);
+    var rebNum=o.rebate!==undefined&&o.rebate!==''?parseFloat(o.rebate):(parseFloat(f['返点比例'])||0);
+    var recvStr=o.recv!==undefined&&o.recv!==''?o.recv:'未回收';
+    var projStr=o.proj!==undefined?o.proj:'';
     window.INF_DATA.push({
       nick:nick,
       tier:f['达人量级']||'', fans:f['粉丝数（w）']||'',
-      exec:parseFloat(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）'])||0,
-      cost:parseFloat(f['下单价格（含10%蒲公英下单费）'])||0,
-      prog:f['稿件进度']||'未开始', pct:0, risk:'normal', rebate:0, recv:'未回收', projects:[]
+      exec:execNum, cost:parseFloat(f['下单价格（含10%蒲公英下单费）'])||0,
+      prog:f['稿件进度']||'未开始', pct:0, risk:'normal',
+      rebate:rebNum, recv:recvStr,
+      proj:projStr, projects:projStr?[projStr]:[]
     });
   });
 }
@@ -1184,19 +1248,49 @@ function renderInf(){
   var tb=document.getElementById('infBody'); if(!tb)return;
   tb.innerHTML='';
   var hidden=getHiddenSet();
+  var ov=getOverrides();
   Object.keys(window.INF).sort(function(a,b){return a.localeCompare(b,'zh');}).forEach(function(nick){
     if(hidden.has(nick))return;
     var f=window.INF[nick]||{};
+    var o=ov[nick]||{};
     var tr=document.createElement('tr'); tr.className='inf-row'; tr.setAttribute('data-nick',nick);
     INF_SCHEMA.forEach(function(col){
       var td=document.createElement('td');
       // 名字列：昵称是记录主键(小红书昵称)，已从子字段剔除，直接用 nick 显示
-      var v=(col.type==='name') ? nick : (f[col.key]||'');
-      if(col.type==='link' && v){
-        var a=document.createElement('a'); a.className='cell-link'; a.href=v; a.target='_blank'; a.rel='noopener'; a.textContent=v; td.appendChild(a);
-      } else if(col.type==='date'){ td.textContent=fmtInfDate(v); }
-      else { td.textContent=v; }
-      if(v)td.title=String(v);
+      if(col.type==='name'){
+        td.textContent=nick; td.className='inf-c-name';
+      } else if(col.type==='link'){
+        var v=f[col.key]||'';
+        if(v){
+          var a=document.createElement('a'); a.className='cell-linkbtn'; a.href=v; a.target='_blank'; a.rel='noopener';
+          a.textContent=col.label; a.title=v; td.appendChild(a);
+        } else { td.className='inf-c-link-empty'; td.textContent='—'; }
+        td.className+=' inf-c-linkcell';
+      } else if(col.type==='input'){
+        // 用户可编辑：飞书有值则预填，否则空；本机覆盖优先
+        var initVal = o[col.persistKey]!==undefined ? o[col.persistKey] : (f[col.key]||'');
+        var inp=document.createElement('input');
+        inp.className='cell-input inf-input'; inp.type=col.inputType||'text';
+        inp.placeholder=col.placeholder||'';
+        inp.value=initVal;
+        inp.dataset.persistKey=col.persistKey;
+        inp.dataset.nick=nick;
+        inp.addEventListener('input',function(){setOverride(nick,col.persistKey,inp.value);});
+        inp.addEventListener('change',function(){setOverride(nick,col.persistKey,inp.value);});
+        td.appendChild(inp);
+      } else if(col.type==='autogroup'){
+        var gname=genGroupName(f,nick);
+        var span=document.createElement('span'); span.className='grp-name'; span.textContent=gname; span.title=gname;
+        var btn=document.createElement('button'); btn.className='btn-ghost btn-sm grp-copy'; btn.textContent='复制群名';
+        btn.title='复制对接群名到剪贴板'; btn.addEventListener('click',function(){copyText(gname);toast('已复制群名：'+gname);});
+        td.appendChild(span); td.appendChild(btn);
+        td.className='inf-c-group';
+      } else if(col.type==='date'){
+        td.textContent=fmtInfDate(f[col.key]||'');
+      } else {
+        var v=f[col.key]||'';
+        td.textContent=v; if(v)td.title=String(v);
+      }
       tr.appendChild(td);
     });
     var tdAct=document.createElement('td'); tdAct.className='inf-c-act';
@@ -1245,17 +1339,19 @@ function copyFeishuCmd(){var t=document.getElementById('feishuCmdText');if(t)cop
 function reapplyLocal(){applyOV();document.querySelectorAll('tr.inf-row').forEach(function(tr){var n=tr.getAttribute('data-nick');if(n)genGroup(n);});toast('已重新应用本机修改');closeFeishuModal();}
 // ===== 达人明细导出 =====
 var EXPORT_COLS=[
-  {key:'name',label:'达人昵称',get:function(f){return f.nick||'';}},
-  {key:'home',label:'主页链接',get:function(f){return f['主页链接']||'';}},
-  {key:'pgy',label:'蒲公英链接',get:function(f){return f['蒲公英链接']||'';}},
-  {key:'price',label:'合作报价',get:function(f){return f['达人报价']||'';}},
-  {key:'project',label:'合作项目',get:function(f){return f['合作项目']||'';}},
-  {key:'draft',label:'稿件链接',get:function(f){return f['稿件链接']||'';}},
-  {key:'stage',label:'稿件进度',get:function(f){return f['稿件进度']||'';}},
-  {key:'publish',label:'发布链接',get:function(f){return f['笔记链接']||'';}},
-  {key:'rebate',label:'返点比例',get:function(f){return f['返点比例']||'';}},
-  {key:'group',label:'对接群名',get:function(f){return f['对接群名']||'';}},
-  {key:'note',label:'备注',get:function(f){return f['备注']||'';}}
+  {key:'name',   label:'达人昵称', get:function(f){return f.nick||'';}},
+  {key:'home',   label:'主页',     get:function(f){return f['主页链接']||'';}},
+  {key:'pgy',    label:'蒲公英',   get:function(f){return f['蒲公英链接']||'';}},
+  {key:'price',  label:'合作报价', get:function(f){return f['达人报价']||'';}},
+  {key:'proj',   label:'所属项目', get:function(f){var o=getOverrides()[f.nick]||{};return o.proj!==undefined?o.proj:(f['合作项目']||'');}},
+  {key:'exec',   label:'执行金额', get:function(f){var o=getOverrides()[f.nick]||{};return o.exec!==undefined?o.exec:(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）']||'');}},
+  {key:'rebate', label:'返点%',   get:function(f){var o=getOverrides()[f.nick]||{};return o.rebate!==undefined?o.rebate:(f['返点比例']||'');}},
+  {key:'recv',   label:'回收',     get:function(f){var o=getOverrides()[f.nick]||{};return o.recv!==undefined?o.recv:'';}},
+  {key:'draft',  label:'稿件',     get:function(f){return f['稿件链接']||'';}},
+  {key:'stage',  label:'稿件进度', get:function(f){return f['稿件进度']||'';}},
+  {key:'publish',label:'发布',     get:function(f){return f['笔记链接']||'';}},
+  {key:'group',  label:'对接群名', get:function(f){return genGroupName(f,f.nick);}},
+  {key:'note',   label:'备注',     get:function(f){return f['备注']||'';}}
 ];
 function csvEscape(v){v=String(v==null?'':v);if(/[",\r\n]/.test(v)){v='"'+v.replace(/"/g,'""')+'"';}return v;}
 function csvDownload(content,filename){var blob=new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);}
