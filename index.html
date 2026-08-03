@@ -1374,9 +1374,9 @@ function loadFeishuCells(){
       if(!nick)return;
       var rec=map[nick];
       if(!rec)return;
-      ['home','pgy','draft'].forEach(function(k){
-        var inp=tr.querySelector('input[data-feishu="'+k+'"]');
-        if(inp&&rec[k]&&!inp.value){inp.value=rec[k];}
+      [['home','主页链接'],['pgy','蒲公英链接'],['draft','稿件链接']].forEach(function(pair){
+        var inp=tr.querySelector('input[data-feishu="'+pair[0]+'"]');
+        if(inp&&rec[pair[1]]&&!inp.value){inp.value=rec[pair[1]];}
       });
     });
   }).catch(function(){});
