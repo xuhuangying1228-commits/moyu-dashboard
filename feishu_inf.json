@@ -2,8 +2,8 @@
   "app_token": "TTmEb8JYhacQUIsMTNxchMMAnte",
   "table_id": "tbl4MwhsLVskmCpl",
   "nick_field": "小红书昵称",
-  "updated": "2026-08-03T07:27:08",
-  "count": 17,
+  "updated": "2026-08-03T07:46:41",
+  "count": 18,
   "data": {
     "可乐同学upup": {
       "主页链接": "https://www.xiaohongshu.com/user/profile/6504432d000000001702345b",
@@ -88,6 +88,11 @@
     "Jayden🌽": {
       "主页链接": "https://www.xiaohongshu.com/user/profile/5cad77a60000000011000dcc",
       "蒲公英链接": "https://pgy.xiaohongshu.com/solar/pre-trade/blogger-detail/5cad77a60000000011000dcc?track_id=kolSearch_1e7570b220c344049e15707fbc51fa6a&fromRoute=Advertiser_Kol&source=Advertiser_Kol",
+      "稿件链接": ""
+    },
+    "栩小安妈咪呀": {
+      "主页链接": "https://www.xiaohongshu.com/user/profile/6555c0410000000004039663",
+      "蒲公英链接": "https://pgy.xiaohongshu.com/solar/pre-trade/blogger-detail/6555c0410000000004039663",
       "稿件链接": ""
     }
   }
