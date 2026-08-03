@@ -1363,12 +1363,67 @@ function buildProjFilter(){
   if(hasUn){var o=document.createElement('option');o.value='未分配';o.textContent='未分配';sel.appendChild(o);}
 }
 function filterProj(sel){var p=sel.value;document.querySelectorAll('.inf-row').forEach(function(tr){var pj=getProj(tr.getAttribute('data-nick'))||'';if(pj==='未分配')pj='';tr.style.display=(p==='__all__'||pj===p)?'':'none';});}
+function cssEscape(s){try{if(window.CSS&&CSS.escape)return CSS.escape(s);}catch(e){}return String(s).replace(/["\\]/g,'\\$&');}
+function infRowHTML(){
+  return ''+
+  '<td class="inf-c-name"><div class="inf-name"></div></td>'+
+  '<td class="inf-c-home"><input class="cell-input home-input" data-feishu="home" placeholder="小红书主页"></td>'+
+  '<td class="inf-c-pgy"><input class="cell-input pgy-input" data-feishu="pgy" placeholder="蒲公英链接"></td>'+
+  '<td class="inf-c-price"><input class="cell-input exec-input" type="number" step="0.1" value="0"><span class="inf-cost">成本¥0.0</span></td>'+
+  '<td class="inf-c-proj"><select class="cell-input proj-input"><option value="未分配" selected>未分配</option></select></td>'+
+  '<td class="inf-c-stage"><select class="cell-input stage-input"><option selected>未开始</option><option>达人-待出脚本</option><option>初稿</option><option>寄出</option><option>定稿待发布</option><option>已发布</option></select></td>'+
+  '<td class="inf-c-draft"><input class="cell-input draft-input" placeholder="稿件链接（飞书同步）" data-feishu="draft"></td>'+
+  '<td class="inf-c-link"><input class="cell-input link-input" placeholder="发布后粘贴链接"></td>'+
+  '<td class="inf-c-reb"><input class="cell-input reb-input" value="" placeholder="—"></td>'+
+  '<td class="inf-c-group"><div class="grp-line"><div class="grp-name"></div><button class="grp-copy">复制</button></div><div class="grp-edit">'+
+    '<input class="cell-input grp-f" data-f="fangan" placeholder="档期MMDD" value="">'+
+    '<input class="cell-input grp-f" data-f="dir" placeholder="内容方向" value="">'+
+    '<select class="cell-input grp-f" data-f="ntype"><option selected>图文</option><option>视频</option><option>其他</option></select>'+
+  '</div></td>'+
+  '<td class="inf-c-note"><input class="cell-input note-input" placeholder="备注"></td>';
+}
+// 飞书多维表里新增、但页面达人表还没有的达人 → 自动插入一行
+function insertInfRow(nick, rec){
+  if(!nick)return;
+  if(document.querySelector('tr.inf-row[data-nick="'+cssEscape(nick)+'"]'))return; // 已存在则跳过（幂等）
+  var tr=document.createElement('tr');
+  tr.className='inf-row';
+  tr.setAttribute('data-exec','0');
+  tr.setAttribute('data-cost','0');
+  tr.setAttribute('data-nick',nick);
+  tr.innerHTML=infRowHTML();
+  tr.querySelector('.inf-name').textContent=nick; // textContent 自动转义，昵称含特殊字符也安全
+  var tb=document.querySelector('table.inf-table tbody');
+  if(!tb)return;
+  tb.appendChild(tr);
+  // 绑定内联编辑事件（昵称经闭包传入，规避引号转义问题）
+  function bind(sel,field){var el=tr.querySelector(sel);if(el)el.addEventListener('change',function(){window.inlineEdit(nick,field,el.value);});}
+  bind('.home-input','home');bind('.pgy-input','pgy');bind('.exec-input','exec');
+  bind('.proj-input','proj');bind('.stage-input','stage');bind('.draft-input','draft');
+  bind('.link-input','link');bind('.reb-input','rebate');bind('.note-input','note');
+  tr.querySelectorAll('.grp-f').forEach(function(g){g.addEventListener('change',function(){window.inlineEdit(nick,g.getAttribute('data-f'),g.value);window.genGroup(nick);});});
+  var copyBtn=tr.querySelector('.grp-copy');if(copyBtn)copyBtn.addEventListener('click',function(){window.copyGroup(nick);});
+  // 飞书三列链接（仅填空白格）
+  [['home','主页链接'],['pgy','蒲公英链接'],['draft','稿件链接']].forEach(function(p){
+    var inp=tr.querySelector('input[data-feishu="'+p[0]+'"]');
+    if(inp&&rec[p[1]]&&!inp.value)inp.value=rec[p[1]];
+  });
+  // 登记进 INF_DATA，供统计/项目关联/编辑弹窗识别（补齐默认字段，不污染真实汇总）
+  INF_DATA.push({nick:nick,tier:'',fans:'',exec:0,cost:0,prog:'未开始',pct:0,risk:'normal',rebate:0,recv:'未回收',projects:[]});
+  // 刷新项目下拉/筛选/删除按钮
+  if(typeof buildProjSelects==='function')buildProjSelects();
+  if(typeof buildProjFilter==='function')buildProjFilter();
+  if(typeof buildInfActions==='function')buildInfActions();
+  // 恢复本机之前编辑过的值 + 群名显示
+  if(typeof window.applyOV==='function')window.applyOV();
+  if(typeof window.genGroup==='function')window.genGroup(nick);
+}
 function loadFeishuCells(){
-  // 读取飞书多维表同步出的 JSON，按昵称把三列链接填进对应 input
-  // 只填为空（无本地修改）的格子，本地已编辑的值优先保留
+  // 读取飞书多维表同步出的 JSON：① 给已有行补三列链接 ② 飞书新增的达人自动插入新行
   fetch('feishu_inf.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
     if(!j||!j.data)return;
     var map=j.data;
+    // ① 已有达人：填三列链接（只填空白格，本地已编辑优先）
     document.querySelectorAll('.inf-row').forEach(function(tr){
       var nick=tr.getAttribute('data-nick');
       if(!nick)return;
@@ -1379,6 +1434,8 @@ function loadFeishuCells(){
         if(inp&&rec[pair[1]]&&!inp.value){inp.value=rec[pair[1]];}
       });
     });
+    // ② 飞书有、表里没有 → 动态插行（幂等：已存在则跳过）
+    Object.keys(map).forEach(function(nick){insertInfRow(nick, map[nick]);});
   }).catch(function(){});
 }
 document.addEventListener('DOMContentLoaded',function(){buildProjSelects();buildProjFilter();buildInfActions();applyHiddenInfs();loadFeishuCells();});
