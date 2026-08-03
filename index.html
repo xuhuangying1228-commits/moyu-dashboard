@@ -1201,9 +1201,10 @@ function renderInf(){
     var tr=document.createElement('tr'); tr.className='inf-row'; tr.setAttribute('data-nick',nick);
     INF_SCHEMA.forEach(function(col){
       var td=document.createElement('td');
-      var v=f[col.key]||'';
+      // 名字列：昵称是记录主键(小红书昵称)，已从子字段剔除，直接用 nick 显示
+      var v=(col.type==='name') ? nick : (f[col.key]||'');
       if(col.type==='link' && v){
-        var a=document.createElement('a'); a.className='cell-link'; a.href=v; a.target='_blank'; a.rel='noopener'; a.textContent='打开'; td.appendChild(a);
+        var a=document.createElement('a'); a.className='cell-link'; a.href=v; a.target='_blank'; a.rel='noopener'; a.textContent=v; td.appendChild(a);
       } else if(col.type==='date'){ td.textContent=fmtInfDate(v); }
       else { td.textContent=v; }
       if(v)td.title=String(v);
@@ -1255,7 +1256,7 @@ function copyFeishuCmd(){var t=document.getElementById('feishuCmdText');if(t)cop
 function reapplyLocal(){applyOV();document.querySelectorAll('tr.inf-row').forEach(function(tr){var n=tr.getAttribute('data-nick');if(n)genGroup(n);});toast('已重新应用本机修改');closeFeishuModal();}
 // ===== 达人明细导出 =====
 var EXPORT_COLS=[
-  {key:'name',label:'达人昵称',get:function(f){return f['达人昵称']||'';}},
+  {key:'name',label:'达人昵称',get:function(f){return f.nick||'';}},
   {key:'home',label:'主页链接',get:function(f){return f['主页链接']||'';}},
   {key:'pgy',label:'蒲公英链接',get:function(f){return f['蒲公英链接']||'';}},
   {key:'price',label:'达人报价',get:function(f){return f['达人报价']||'';}},
