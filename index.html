@@ -1966,7 +1966,7 @@ function bindMatDrop(){
 (function(){
   var SUPABASE_URL='https://uprzqcwojftvmreotuhb.supabase.co';
   var SUPABASE_KEY='sb_publishable_ZjXJpnvunlu8eqzt2Ko5fQ_IxWW_AIc';
-  var SYNC_KEYS=['mf_todo','mf_inbox','mf_inf_draft','mf_master','mf_materials','mf_materials_seeded','mf_delivery_doc','mf_hidden_infs','mf_replay','mf_experts'];
+  var SYNC_KEYS=['mf_todo','mf_inbox','mf_inf_draft','mf_master','mf_materials','mf_materials_seeded','mf_delivery_doc','mf_hidden_infs','mf_replay','mf_experts','moyu_inf_overrides_v1'];
 
   var SB=null;
   try{ SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}}); }
@@ -2010,7 +2010,7 @@ function bindMatDrop(){
     }
   }
   function renderAll(){
-    ['setGreeting','applyTodoState','renderInbox','applyMaster','renderReplay','renderExperts','loadDelivery','renderAllInv','toggleShipNote','renderMats','applyHiddenInfs'].forEach(function(fn){
+    ['setGreeting','applyTodoState','renderInbox','applyMaster','renderReplay','renderExperts','loadDelivery','renderAllInv','toggleShipNote','renderMats','applyHiddenInfs','renderInf'].forEach(function(fn){
       try{ if(typeof window[fn]==='function'){ fn==='renderReplay'?window[fn]('__all__'):window[fn](); } }catch(e){}
     });
   }
