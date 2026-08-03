@@ -126,7 +126,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .bar{width:60%;max-width:70px;background:var(--accent);border-radius:8px 8px 0 0;min-height:8px}
 .chart{width:100%;height:170px}
 .inf-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
-.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:1570px}
+.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:2600px}
 .inf-table thead th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:11px 14px;border-bottom:2px solid var(--border);white-space:nowrap;z-index:2}
 .inf-row{border-bottom:1px solid var(--border)}
 .inf-row:last-child{border-bottom:none}
@@ -144,6 +144,11 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .inf-stage{display:block;font-size:11px;color:var(--muted);margin-top:4px}
 .inf-c-ms .ms{margin:0 5px 5px 0}
 .inf-cost{font-size:11px;color:var(--muted);margin-left:6px}
+.inf-c-act{white-space:nowrap;text-align:center}
+.inf-del{width:28px;height:28px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;line-height:1;transition:.15s;vertical-align:middle}
+.inf-del:hover{background:var(--danger);border-color:var(--danger);color:#fff}
+.cell-link{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-weak)}
+.cell-link:hover{text-decoration:underline}
 .inf-price{font-weight:700;color:var(--accent)}
 .inf-c-cd{font-size:12px;color:var(--muted)}
 .cd-severe{color:var(--danger);font-weight:600}
@@ -896,7 +901,7 @@ body.locked{overflow:hidden;}
       
     <section class="page" id="page-influencers">
       <div class="master"><div class="sec-h"><h2><svg class="h-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>达人合作 · 经营总表</h2><span class="muted">定号 / 缺口 / 金额 / 预算 / 利润 一览 · 预算与计划数存本浏览器</span></div><div class="master-ctrl"><label>项目总预算 ¥<input id="budgetInput" type="number" inputmode="numeric" placeholder="点此填写" oninput="onBudget(this)"></label><label>计划定号数 <input id="planInput" type="number" placeholder="14" oninput="onPlan(this)"></label><span class="muted">预算/计划数仅存本浏览器，换设备需重填</span></div><div id="masterData" data-cost="43780" data-exec="46646" data-confirm="14" data-plan="14"></div><div class="sum-grid" id="masterKpi"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">已定号达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--accent)">¥46,645</div><div class="sum-l">合作金额(对客·Σ执行)</div></div><div class="sum-card"><div class="sum-v" style="color:var(--text)">¥43,780</div><div class="sum-l">实际成本(Σ下单)</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥2,865</div><div class="sum-l">代理毛利(执行−下单)</div></div><div class="sum-card"><div class="sum-v" id="masterRebateTotal" style="color:var(--accent)">—</div><div class="sum-l">返点总额</div></div><div class="sum-card"><div class="sum-v" id="masterRebateRate" style="color:var(--accent)">—</div><div class="sum-l">均返点率</div></div><div class="sum-card"><div class="sum-v" id="masterRebateRecv" style="color:var(--warn)">—</div><div class="sum-l">未回收返点</div></div><div class="sum-card"><div class="sum-v" id="masterRemain" style="color:var(--muted)">未设置</div><div class="sum-l">剩余预算(预算−执行)</div></div><div class="sum-card"><div class="sum-v" id="masterGap" style="color:var(--warn)">—</div><div class="sum-l">定号缺口(计划−已定)</div></div></div><div class="panel"><div class="panel-h"><span><svg class="ph-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>达人金额明细（按量级）</span></div><div class="panel-b" style="padding:0"><table class="tbl"><thead><tr><th>量级</th><th>人数</th><th>成本(Σ下单)</th><th>对客(Σ执行)</th></tr></thead><tbody><tr><td>尾部</td><td>7</td><td>¥23,870</td><td>¥25,432</td></tr><tr><td>KOC</td><td>4</td><td>¥15,180</td><td>¥16,173</td></tr><tr><td>素人</td><td>3</td><td>¥4,730</td><td>¥5,039</td></tr></tbody></table></div></div></div>
-      <div class="sec-h"><h2>达人明细</h2><span class="muted">多维表 + 达人配置表合并 · 14 位达人 · 每日 09:00 自动同步 · 返点/回收/项目/执行价在飞书「达人配置」表编辑（跨设备共享）</span><div class="sec-actions"><button class="btn-refresh" onclick="refreshFeishu()">🔄 刷新达人数据</button><button class="btn-ghost btn-sm" onclick="restoreInfs()">♻️ 恢复隐藏</button><button class="btn-ghost btn-sm" onclick="openExportModal()">📥 导出达人</button></div></div>
+      <div class="sec-h"><h2>达人明细</h2><span class="muted">飞书多维表驱动 · 每日 09:00 自动同步 · 达人增删改全同步（共 <span id="infTotal">0</span> 位）</span><div class="sec-actions"><button class="btn-refresh" onclick="refreshFeishu()">🔄 刷新达人数据</button><button class="btn-ghost btn-sm" onclick="restoreInfs()">♻️ 恢复隐藏</button><button class="btn-ghost btn-sm" onclick="openExportModal()">📥 导出达人</button></div></div>
       
     <div class="inf-form card">
       <div class="inf-form-h"><span>➕ 新增 / 编辑达人</span><span class="muted">只填配置表字段 · 提交存本地草稿 · 跟我说「同步到飞书」仅补写达人配置表（不动多维表）</span></div>
@@ -916,10 +921,10 @@ body.locked{overflow:hidden;}
       </div>
     </div>
       <div class="sum-grid"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">在跟进达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--danger)">2</div><div class="sum-l">严重逾期</div></div><div class="sum-card"><div class="sum-v" style="color:var(--warn)">6</div><div class="sum-l">需关注</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥46645</div><div class="sum-l">报价合计</div></div></div>
-      <div class="inf-filterbar"><span class="muted">按项目筛选：</span><select class="proj-filter" onchange="filterProj(this)"><option value="__all__">全部项目</option><option value="大脸书瞳">大脸书瞳</option></select></div>
+      <!-- 飞书为唯一数据源，项目筛选暂隐（合作项目列补齐到飞书后可启用） -->
       <div class="inf-wrap"><table class="inf-table">
-        <thead><tr><th>达人昵称</th><th>主页链接</th><th>蒲公英链接</th><th>合作报价</th><th>合作项目</th><th>稿件进度</th><th>稿件链接</th><th>发布链接</th><th>返点比例</th><th>对接群名</th><th>备注</th><th>操作</th></tr></thead>
-        <tbody>
+        <thead><tr><th>达人昵称</th><th>主页链接</th><th>蒲公英链接</th><th>达人报价</th><th>执行价格</th><th>下单价格</th><th>达人量级</th><th>粉丝数(w)</th><th>合作平台</th><th>内容方向</th><th>笔记类型</th><th>稿件进度</th><th>稿件链接</th><th>笔记链接</th><th>寄品进度</th><th>发布档期</th><th>授权</th><th>排竞</th><th>备注</th><th>操作</th></tr></thead>
+        <tbody id="infBody">
 <tr class="inf-row" data-exec="2578.4" data-cost="2420.0" data-nick="可乐同学upup">
           <td class="inf-c-name"><div class="inf-name">可乐同学upup</div></td>
           <td class="inf-c-home"><input class="cell-input home-input" data-feishu="home" placeholder="小红书主页" onchange="inlineEdit('可乐同学upup','home',this.value)"></td>
@@ -1296,13 +1301,16 @@ body.locked{overflow:hidden;}
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="name" checked>达人昵称</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="home" checked>主页链接</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="pgy" checked>蒲公英链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="exec" checked>合作报价</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="proj" checked>合作项目</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="price" checked>达人报价</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="exec" checked>执行价格</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="cost" checked>下单价格</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="tier" checked>达人量级</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="fans" checked>粉丝数(w)</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="platform" checked>合作平台</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="dir" checked>内容方向</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="type" checked>笔记类型</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="stage" checked>稿件进度</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="draft" checked>稿件链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="link" checked>发布链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="rebate" checked>返点比例</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="grp" checked>对接群名</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="note" checked>备注</label>
           </div>
           <div style="display:flex;gap:8px"><button class="btn-ghost btn-sm" onclick="expSelAll()">全选</button><button class="btn-ghost btn-sm" onclick="expSelNone()">全不选</button></div>
@@ -1418,34 +1426,101 @@ function insertInfRow(nick, rec){
   if(typeof window.applyOV==='function')window.applyOV();
   if(typeof window.genGroup==='function')window.genGroup(nick);
 }
-function loadFeishuCells(){
-  // 读取飞书多维表同步出的 JSON：① 给已有行补三列链接 ② 飞书新增的达人自动插入新行
-  fetch('feishu_inf.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
-    if(!j||!j.data)return;
-    var map=j.data;
-    // ① 已有达人：填三列链接（只填空白格，本地已编辑优先）
-    document.querySelectorAll('.inf-row').forEach(function(tr){
-      var nick=tr.getAttribute('data-nick');
-      if(!nick)return;
-      var rec=map[nick];
-      if(!rec)return;
-      [['home','主页链接'],['pgy','蒲公英链接'],['draft','稿件链接']].forEach(function(pair){
-        var inp=tr.querySelector('input[data-feishu="'+pair[0]+'"]');
-        if(inp&&rec[pair[1]]&&!inp.value){inp.value=rec[pair[1]];}
-      });
-    });
-    // ② 飞书有、表里没有 → 动态插行（幂等：已存在则跳过）
-    Object.keys(map).forEach(function(nick){insertInfRow(nick, map[nick]);});
-  }).catch(function(){});
+// ===== 飞书驱动：达人明细表完全由飞书多维表渲染（增删改全同步）=====
+var INF_SCHEMA=[
+  {key:'达人昵称', label:'达人昵称', type:'name'},
+  {key:'主页链接', label:'主页链接', type:'link'},
+  {key:'蒲公英链接', label:'蒲公英链接', type:'link'},
+  {key:'达人报价', label:'达人报价', type:'text'},
+  {key:'执行价格（加10%平台服务费+5%服务费+小红星2%服务费）', label:'执行价格', type:'text'},
+  {key:'下单价格（含10%蒲公英下单费）', label:'下单价格', type:'text'},
+  {key:'达人量级', label:'达人量级', type:'text'},
+  {key:'粉丝数（w）', label:'粉丝数(w)', type:'text'},
+  {key:'合作平台', label:'合作平台', type:'text'},
+  {key:'内容方向', label:'内容方向', type:'text'},
+  {key:'笔记类型', label:'笔记类型', type:'text'},
+  {key:'稿件进度', label:'稿件进度', type:'text'},
+  {key:'稿件链接', label:'稿件链接', type:'link'},
+  {key:'笔记链接', label:'笔记链接', type:'link'},
+  {key:'寄品进度', label:'寄品进度', type:'text'},
+  {key:'发布档期', label:'发布档期', type:'date'},
+  {key:'授权', label:'授权', type:'text'},
+  {key:'排竞', label:'排竞', type:'text'},
+  {key:'备注', label:'备注', type:'text'}
+];
+window.INF={};
+function fmtInfDate(v){
+  if(v===null||v===undefined||v==='')return '';
+  var s=String(v).trim();
+  if(/^\d{12,}$/.test(s)){
+    var d=new Date(Number(s));
+    if(!isNaN(d.getTime())){var p=function(x){return x<10?'0'+x:x;};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+  }
+  return s;
 }
-document.addEventListener('DOMContentLoaded',function(){buildProjSelects();buildProjFilter();buildInfActions();applyHiddenInfs();loadFeishuCells();});
+function getHiddenSet(){try{return new Set(JSON.parse(localStorage.getItem('mf_hidden_infs')||'[]'));}catch(e){return new Set();}}
+function rebuildInfData(){
+  window.INF_DATA=[];
+  Object.keys(window.INF).forEach(function(nick){
+    var f=window.INF[nick]||{};
+    window.INF_DATA.push({
+      nick:nick,
+      tier:f['达人量级']||'', fans:f['粉丝数（w）']||'',
+      exec:parseFloat(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）'])||0,
+      cost:parseFloat(f['下单价格（含10%蒲公英下单费）'])||0,
+      prog:f['稿件进度']||'未开始', pct:0, risk:'normal', rebate:0, recv:'未回收', projects:[]
+    });
+  });
+}
+function renderInf(){
+  var tb=document.getElementById('infBody'); if(!tb)return;
+  tb.innerHTML='';
+  var hidden=getHiddenSet();
+  Object.keys(window.INF).sort(function(a,b){return a.localeCompare(b,'zh');}).forEach(function(nick){
+    if(hidden.has(nick))return;
+    var f=window.INF[nick]||{};
+    var tr=document.createElement('tr'); tr.className='inf-row'; tr.setAttribute('data-nick',nick);
+    INF_SCHEMA.forEach(function(col){
+      var td=document.createElement('td');
+      var v=f[col.key]||'';
+      if(col.type==='link' && v){
+        var a=document.createElement('a'); a.className='cell-link'; a.href=v; a.target='_blank'; a.rel='noopener'; a.textContent='打开'; td.appendChild(a);
+      } else if(col.type==='date'){ td.textContent=fmtInfDate(v); }
+      else { td.textContent=v; }
+      if(v)td.title=String(v);
+      tr.appendChild(td);
+    });
+    var tdAct=document.createElement('td'); tdAct.className='inf-c-act';
+    var bDel=document.createElement('button'); bDel.className='inf-del'; bDel.title='隐藏该达人'; bDel.textContent='✕'; bDel.addEventListener('click',function(){delInf(nick);});
+    var bInv=document.createElement('button'); bInv.className='btn-ghost btn-sm'; bInv.textContent='邀约'; bInv.addEventListener('click',function(){genInviteFromNick(nick);});
+    tdAct.appendChild(bDel); tdAct.appendChild(document.createTextNode(' ')); tdAct.appendChild(bInv);
+    tr.appendChild(tdAct);
+    tb.appendChild(tr);
+  });
+  var tot=document.getElementById('infTotal'); if(tot)tot.textContent=Object.keys(window.INF).length;
+}
+function genInviteFromNick(nick){
+  var iv=document.getElementById('ivNick'); if(iv)iv.value=nick;
+  var btn=document.querySelector('.tb-tab[onclick*="tbPaneInvite"]'); if(btn)btn.click();
+  toast('已带入达人：'+nick);
+}
+function loadFeishuCells(){
+  fetch('feishu_inf.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+    if(!j||!j.data){toast('飞书数据为空，请检查同步');return;}
+    window.INF=j.data;
+    rebuildInfData();
+    renderInf();
+    if(typeof applyMaster==='function')applyMaster();
+  }).catch(function(){toast('飞书数据加载失败，请稍后重试');});
+}
+document.addEventListener('DOMContentLoaded',function(){loadFeishuCells();});
 function renderProjInf(i){var box=document.getElementById('pdinf-'+i);if(!box)return;var proj=PNAMES[i];var list=INF_DATA.filter(function(d){return getProj(d.nick)===proj;});if(!list.length){box.innerHTML='<div class="muted">该项目暂未关联达人。去「达人合作」页给达人选择所属项目即可关联。</div>';return;}var html='<table class="tbl inf-mini"><thead><tr><th>达人</th><th>量级</th><th>进度</th><th>执行价</th><th>返点</th><th>回收</th><th></th></tr></thead><tbody>';var treb=0,texec=0;list.forEach(function(d){var pct=d.rebate||0;var amt=d.exec*pct/100;if(pct>0){treb+=amt;texec+=d.exec;}var recv=d.recv==='已回收'?'✅':'—';html+='<tr><td>'+esc(d.nick)+'</td><td>'+esc(d.tier)+'</td><td>'+esc(d.prog)+'</td><td>¥'+Math.round(d.exec).toLocaleString('zh-CN')+'</td><td>'+(pct>0?(pct+'% · ¥'+Math.round(amt).toLocaleString('zh-CN')):'—')+'</td><td>'+recv+'</td><td><a class="link-btn j-detail" data-nick="'+esc(d.nick)+'">详情 →</a></td></tr>';});html+='</tbody></table><div class="muted" style="margin-top:8px">本项目关联 '+list.length+' 位达人 · 返点总额 ¥'+Math.round(treb).toLocaleString('zh-CN')+' · 整体返点率 '+(texec>0?(treb/texec*100).toFixed(1):'0')+'%</div>';box.innerHTML=html;}
 function gotoInf(nick){go('influencers');setTimeout(function(){document.querySelectorAll('.inf-row').forEach(function(tr){if(tr.getAttribute('data-nick')===nick){tr.classList.add('row-hl');tr.scrollIntoView({behavior:'smooth',block:'center'});}});},80);}
 function editInf(nick){var d=InfByNick(nick);if(!d){toast('未找到达人数据');return;}go('influencers');setTimeout(function(){var f=document.getElementById('if_nick');if(f)f.value=d.nick||'';var p=document.getElementById('if_price');if(p)p.value=d.exec?Math.round(d.exec/1.157):'';var r=document.getElementById('if_reb');if(r)r.value=d.rebate||'';var rv=document.getElementById('if_recv');if(rv)rv.value=d.recv||'';var chks=document.querySelectorAll('[name=if_proj]');chks.forEach(function(c){c.checked=(d.projects||[]).indexOf(c.value)>=0;});var n=document.getElementById('if_note');if(n)n.value=d.note||'';window.scrollTo({top:0,behavior:'smooth'});toast('已加载「'+nick+'」的信息，修改后点提交保存');},120);}
-function delInf(btn){var tr=btn.closest('.inf-row');if(!tr){toast('无法定位行');return;}var nick=btn.dataset.nick||tr.getAttribute('data-nick')||'';var name=tr.querySelector('.inf-name');var disp=name?name.textContent:nick;if(!confirm('确认隐藏达人「'+disp+'」？\n此操作仅隐藏本地显示，不会删除飞书原始数据；可在上方「恢复隐藏」找回。'))return;var hidden=JSON.parse(localStorage.getItem('mf_hidden_infs')||'[]');if(hidden.indexOf(nick)<0){hidden.push(nick);localStorage.setItem('mf_hidden_infs',JSON.stringify(hidden));}tr.style.display='none';toast('已隐藏「'+disp+'」（点上方「恢复隐藏」可找回）');}
-function applyHiddenInfs(){var hidden=JSON.parse(localStorage.getItem('mf_hidden_infs')||'[]');hidden.forEach(function(nick){document.querySelectorAll('.inf-row[data-nick="'+nick+'"]').forEach(function(tr){tr.style.display='none';});});}
+function delInf(nick){if(!confirm('确认隐藏达人「'+nick+'」？\n仅本地隐藏显示，不删飞书数据；可在上方「恢复隐藏」找回。'))return;var hidden=getHiddenSet();hidden.add(nick);localStorage.setItem('mf_hidden_infs',JSON.stringify(Array.from(hidden)));renderInf();toast('已隐藏「'+nick+'」');}
+function applyHiddenInfs(){ renderInf(); }
 function buildInfActions(){if(!document.getElementById('infActStyle')){var s=document.createElement('style');s.id='infActStyle';s.textContent='.inf-c-act{width:42px;text-align:center;white-space:nowrap}.inf-del{width:26px;height:26px;border:1px solid var(--line,#e5e7eb);border-radius:8px;background:#fff;color:var(--muted,#8a8f98);cursor:pointer;font-size:13px;line-height:1;transition:.15s}.inf-del:hover{background:var(--danger,#e5484d);border-color:var(--danger,#e5484d);color:#fff}';document.head.appendChild(s);}document.querySelectorAll('tr.inf-row').forEach(function(tr){if(tr.querySelector('.inf-c-act'))return;var nick=tr.getAttribute('data-nick')||'';var td=document.createElement('td');td.className='inf-c-act';var b=document.createElement('button');b.className='inf-del';b.title='隐藏该达人';b.textContent='✕';b.dataset.nick=nick;b.setAttribute('onclick','delInf(this)');td.appendChild(b);tr.appendChild(td);});}
-function restoreInfs(){localStorage.removeItem('mf_hidden_infs');document.querySelectorAll('tr.inf-row').forEach(function(tr){tr.style.display='';});var pf=document.querySelector('.proj-filter');if(pf)filterProj(pf);toast('已恢复全部隐藏的达人');}
+function restoreInfs(){localStorage.removeItem('mf_hidden_infs');renderInf();if(typeof applyMaster==='function')applyMaster();toast('已恢复全部隐藏的达人');}
 document.addEventListener('click',function(e){var a=e.target.closest?e.target.closest('.j-detail'):null;if(a){gotoInf(a.getAttribute('data-nick'));}});
 function loadInbox(){try{return JSON.parse(localStorage.getItem('mf_inbox')||'[]');}catch(e){return[];}}
 function renderInbox(){var list=loadInbox();var box=document.getElementById('inboxList');if(!box)return;box.innerHTML=list.length?list.map(function(n){return '<div class="inbox-item"><div class="ii-t">'+esc(n.t)+'</div><div class="ii-ts">'+esc(n.ts)+'</div></div>';}).join(''):'<div class="muted">还没有速记，记下第一条吧</div>';}
@@ -1455,42 +1530,52 @@ function clearInbox(){if(!confirm('清空速记箱？此操作不可恢复'))ret
 var REFRESH_CMD='python3 obsidian_scan.py && python3 generate_workbench.py';
 function refreshKB(){copyText(REFRESH_CMD);toast('已复制刷新命令，终端粘贴运行即可更新；每日 09:00 也会自动刷新');}
 var FEISHU_CMD='python3 feishu_fetch.py && python3 generate_workbench.py';
-function refreshFeishu(){var t=document.getElementById('feishuCmdText');if(t)t.textContent=FEISHU_CMD;var m=document.getElementById('feishuMask');if(m)m.classList.add('show');}
+function refreshFeishu(){loadFeishuCells();toast('已从飞书同步文件重新加载（如需最新数据请先到 GitHub Actions 触发同步）');}
 function closeFeishuModal(){var m=document.getElementById('feishuMask');if(m)m.classList.remove('show');}
 function copyFeishuCmd(){var t=document.getElementById('feishuCmdText');if(t)copyText(t.textContent);toast('已复制刷新命令');}
 function reapplyLocal(){applyOV();document.querySelectorAll('tr.inf-row').forEach(function(tr){var n=tr.getAttribute('data-nick');if(n)genGroup(n);});toast('已重新应用本机修改');closeFeishuModal();}
 // ===== 达人明细导出 =====
 var EXPORT_COLS=[
-  {key:'name',label:'达人昵称',get:function(tr){var n=tr.querySelector('.inf-name');return n?n.textContent.trim():(tr.dataset.nick||'');}},
-  {key:'home',label:'主页链接',get:function(tr){var i=tr.querySelector('.home-input');return i?i.value:'';}},
-  {key:'pgy',label:'蒲公英链接',get:function(tr){var i=tr.querySelector('.pgy-input');return i?i.value:'';}},
-  {key:'exec',label:'合作报价',get:function(tr){var i=tr.querySelector('.exec-input');var c=tr.querySelector('.inf-cost');if(!i)return '';var v=i.value;if(c){var n=(c.textContent||'').replace(/[^\d.]/g,'');if(n)v+=' / 成本¥'+n;}return v;}},
-  {key:'proj',label:'合作项目',get:function(tr){var i=tr.querySelector('.proj-input');return i?i.value:'';}},
-  {key:'stage',label:'稿件进度',get:function(tr){var i=tr.querySelector('.stage-input');return i?i.value:'';}},
-  {key:'draft',label:'稿件链接',get:function(tr){var i=tr.querySelector('.draft-input');return i?i.value:'';}},
-  {key:'link',label:'发布链接',get:function(tr){var i=tr.querySelector('.link-input');return i?i.value:'';}},
-  {key:'rebate',label:'返点比例',get:function(tr){var i=tr.querySelector('.reb-input');return i?i.value:'';}},
-  {key:'grp',label:'对接群名',get:function(tr){var s=tr.querySelector('.grp-name');return s?s.textContent.trim():'';}},
-  {key:'note',label:'备注',get:function(tr){var i=tr.querySelector('.note-input');return i?i.value:'';}}
+  {key:'name',label:'达人昵称',get:function(f){return f['达人昵称']||'';}},
+  {key:'home',label:'主页链接',get:function(f){return f['主页链接']||'';}},
+  {key:'pgy',label:'蒲公英链接',get:function(f){return f['蒲公英链接']||'';}},
+  {key:'price',label:'达人报价',get:function(f){return f['达人报价']||'';}},
+  {key:'exec',label:'执行价格',get:function(f){return f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）']||'';}},
+  {key:'cost',label:'下单价格',get:function(f){return f['下单价格（含10%蒲公英下单费）']||'';}},
+  {key:'tier',label:'达人量级',get:function(f){return f['达人量级']||'';}},
+  {key:'fans',label:'粉丝数(w)',get:function(f){return f['粉丝数（w）']||'';}},
+  {key:'platform',label:'合作平台',get:function(f){return f['合作平台']||'';}},
+  {key:'dir',label:'内容方向',get:function(f){return f['内容方向']||'';}},
+  {key:'type',label:'笔记类型',get:function(f){return f['笔记类型']||'';}},
+  {key:'stage',label:'稿件进度',get:function(f){return f['稿件进度']||'';}},
+  {key:'draft',label:'稿件链接',get:function(f){return f['稿件链接']||'';}},
+  {key:'note',label:'备注',get:function(f){return f['备注']||'';}}
 ];
 function csvEscape(v){v=String(v==null?'':v);if(/[",\r\n]/.test(v)){v='"'+v.replace(/"/g,'""')+'"';}return v;}
 function csvDownload(content,filename){var blob=new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);}
 function expSelAll(){document.querySelectorAll('.exp-cb-input').forEach(function(c){c.checked=true;});updateExpPreview();}
 function expSelNone(){document.querySelectorAll('.exp-cb-input').forEach(function(c){c.checked=false;});updateExpPreview();}
 function getExpSelectedCols(){return EXPORT_COLS.filter(function(c){var cb=document.querySelector('.exp-cb-input[data-key="'+c.key+'"]');return cb&&cb.checked;});}
-function getExpRows(){var sc=document.querySelector('input[name=expScope]:checked');var all=Array.from(document.querySelectorAll('tr.inf-row'));var vis=all.filter(function(tr){return tr.style.display!=='none';});return sc&&sc.value==='all'?all:vis;}
+function getExpRows(){
+  var sc=document.querySelector('input[name=expScope]:checked');
+  var hidden=getHiddenSet();
+  var rows=Object.keys(window.INF).map(function(n){var o={};o.nick=n;var f=window.INF[n]||{};for(var k in f)o[k]=f[k];return o;});
+  if(sc&&sc.value==='visible'){rows=rows.filter(function(r){return !hidden.has(r.nick);});}
+  return rows;
+}
 function updateExpPreview(){
   var cols=getExpSelectedCols();
   var rows=getExpRows();
-  var visN=Array.from(document.querySelectorAll('tr.inf-row')).filter(function(tr){return tr.style.display!=='none';}).length;
-  var allN=document.querySelectorAll('tr.inf-row').length;
+  var hidden=getHiddenSet();
+  var visN=Object.keys(window.INF).filter(function(n){return !hidden.has(n);}).length;
+  var allN=Object.keys(window.INF).length;
   var cv=document.getElementById('expCountVisible');if(cv)cv.textContent=visN;
   var ca=document.getElementById('expCountAll');if(ca)ca.textContent=allN;
   var pv=document.getElementById('expPreview');if(!pv)return;
   if(!cols.length){pv.textContent='（请至少勾选一个字段）';return;}
   if(!rows.length){pv.textContent='（当前范围内没有达人）';return;}
   var lines=[cols.map(function(c){return c.label;}).join(' | ')];
-  rows.slice(0,2).forEach(function(tr){lines.push(cols.map(function(c){var v=c.get(tr);return v.length>26?v.slice(0,24)+'…':v;}).join(' | '));});
+  rows.slice(0,2).forEach(function(row){lines.push(cols.map(function(c){var v=c.get(row);return v.length>26?v.slice(0,24)+'…':v;}).join(' | '));});
   if(rows.length>2)lines.push('… 还有 '+(rows.length-2)+' 行未显示');
   pv.textContent=lines.join('\n');
 }
@@ -1501,7 +1586,7 @@ function exportInfCsv(){
   if(!cols.length){toast('请至少勾选一个字段');return;}
   if(!rows.length){toast('当前范围内没有达人');return;}
   var lines=[cols.map(function(c){return csvEscape(c.label);}).join(',')];
-  rows.forEach(function(tr){lines.push(cols.map(function(c){return csvEscape(c.get(tr));}).join(','));});
+  rows.forEach(function(row){lines.push(cols.map(function(c){return csvEscape(c.get(row));}).join(','));});
   var d=new Date(),p=function(n){return n<10?'0'+n:n;};
   var stamp=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+'-'+p(d.getMinutes());
   csvDownload(lines.join('\r\n'),'达人明细_'+stamp+'.csv');
