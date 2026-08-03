@@ -126,7 +126,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .bar{width:60%;max-width:70px;background:var(--accent);border-radius:8px 8px 0 0;min-height:8px}
 .chart{width:100%;height:170px}
 .inf-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
-.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:2600px}
+.inf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:1500px}
 .inf-table thead th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:11px 14px;border-bottom:2px solid var(--border);white-space:nowrap;z-index:2}
 .inf-row{border-bottom:1px solid var(--border)}
 .inf-row:last-child{border-bottom:none}
@@ -923,7 +923,7 @@ body.locked{overflow:hidden;}
       <div class="sum-grid"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">在跟进达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--danger)">2</div><div class="sum-l">严重逾期</div></div><div class="sum-card"><div class="sum-v" style="color:var(--warn)">6</div><div class="sum-l">需关注</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥46645</div><div class="sum-l">报价合计</div></div></div>
       <!-- 飞书为唯一数据源，项目筛选暂隐（合作项目列补齐到飞书后可启用） -->
       <div class="inf-wrap"><table class="inf-table">
-        <thead><tr><th>达人昵称</th><th>主页链接</th><th>蒲公英链接</th><th>达人报价</th><th>执行价格</th><th>下单价格</th><th>达人量级</th><th>粉丝数(w)</th><th>合作平台</th><th>内容方向</th><th>笔记类型</th><th>稿件进度</th><th>稿件链接</th><th>笔记链接</th><th>寄品进度</th><th>发布档期</th><th>授权</th><th>排竞</th><th>备注</th><th>操作</th></tr></thead>
+        <thead><tr><th>达人昵称</th><th>主页链接</th><th>蒲公英链接</th><th>合作报价</th><th>合作项目</th><th>稿件链接</th><th>稿件进度</th><th>发布链接</th><th>返点比例</th><th>对接群名</th><th>备注</th><th>操作</th></tr></thead>
         <tbody id="infBody"></tbody>
       </table></div>
     </section>
@@ -1020,16 +1020,13 @@ body.locked{overflow:hidden;}
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="name" checked>达人昵称</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="home" checked>主页链接</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="pgy" checked>蒲公英链接</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="price" checked>达人报价</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="exec" checked>执行价格</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="cost" checked>下单价格</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="tier" checked>达人量级</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="fans" checked>粉丝数(w)</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="platform" checked>合作平台</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="dir" checked>内容方向</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="type" checked>笔记类型</label>
-            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="stage" checked>稿件进度</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="price" checked>合作报价</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="project" checked>合作项目</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="draft" checked>稿件链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="stage" checked>稿件进度</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="publish" checked>发布链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="rebate" checked>返点比例</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="group" checked>对接群名</label>
             <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="note" checked>备注</label>
           </div>
           <div style="display:flex;gap:8px"><button class="btn-ghost btn-sm" onclick="expSelAll()">全选</button><button class="btn-ghost btn-sm" onclick="expSelNone()">全不选</button></div>
@@ -1150,21 +1147,13 @@ var INF_SCHEMA=[
   {key:'达人昵称', label:'达人昵称', type:'name'},
   {key:'主页链接', label:'主页链接', type:'link'},
   {key:'蒲公英链接', label:'蒲公英链接', type:'link'},
-  {key:'达人报价', label:'达人报价', type:'text'},
-  {key:'执行价格（加10%平台服务费+5%服务费+小红星2%服务费）', label:'执行价格', type:'text'},
-  {key:'下单价格（含10%蒲公英下单费）', label:'下单价格', type:'text'},
-  {key:'达人量级', label:'达人量级', type:'text'},
-  {key:'粉丝数（w）', label:'粉丝数(w)', type:'text'},
-  {key:'合作平台', label:'合作平台', type:'text'},
-  {key:'内容方向', label:'内容方向', type:'text'},
-  {key:'笔记类型', label:'笔记类型', type:'text'},
-  {key:'稿件进度', label:'稿件进度', type:'text'},
+  {key:'达人报价', label:'合作报价', type:'text'},
+  {key:'合作项目', label:'合作项目', type:'text'},
   {key:'稿件链接', label:'稿件链接', type:'link'},
-  {key:'笔记链接', label:'笔记链接', type:'link'},
-  {key:'寄品进度', label:'寄品进度', type:'text'},
-  {key:'发布档期', label:'发布档期', type:'date'},
-  {key:'授权', label:'授权', type:'text'},
-  {key:'排竞', label:'排竞', type:'text'},
+  {key:'稿件进度', label:'稿件进度', type:'text'},
+  {key:'笔记链接', label:'发布链接', type:'link'},
+  {key:'返点比例', label:'返点比例', type:'text'},
+  {key:'对接群名', label:'对接群名', type:'text'},
   {key:'备注', label:'备注', type:'text'}
 ];
 window.INF={};
@@ -1259,16 +1248,13 @@ var EXPORT_COLS=[
   {key:'name',label:'达人昵称',get:function(f){return f.nick||'';}},
   {key:'home',label:'主页链接',get:function(f){return f['主页链接']||'';}},
   {key:'pgy',label:'蒲公英链接',get:function(f){return f['蒲公英链接']||'';}},
-  {key:'price',label:'达人报价',get:function(f){return f['达人报价']||'';}},
-  {key:'exec',label:'执行价格',get:function(f){return f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）']||'';}},
-  {key:'cost',label:'下单价格',get:function(f){return f['下单价格（含10%蒲公英下单费）']||'';}},
-  {key:'tier',label:'达人量级',get:function(f){return f['达人量级']||'';}},
-  {key:'fans',label:'粉丝数(w)',get:function(f){return f['粉丝数（w）']||'';}},
-  {key:'platform',label:'合作平台',get:function(f){return f['合作平台']||'';}},
-  {key:'dir',label:'内容方向',get:function(f){return f['内容方向']||'';}},
-  {key:'type',label:'笔记类型',get:function(f){return f['笔记类型']||'';}},
-  {key:'stage',label:'稿件进度',get:function(f){return f['稿件进度']||'';}},
+  {key:'price',label:'合作报价',get:function(f){return f['达人报价']||'';}},
+  {key:'project',label:'合作项目',get:function(f){return f['合作项目']||'';}},
   {key:'draft',label:'稿件链接',get:function(f){return f['稿件链接']||'';}},
+  {key:'stage',label:'稿件进度',get:function(f){return f['稿件进度']||'';}},
+  {key:'publish',label:'发布链接',get:function(f){return f['笔记链接']||'';}},
+  {key:'rebate',label:'返点比例',get:function(f){return f['返点比例']||'';}},
+  {key:'group',label:'对接群名',get:function(f){return f['对接群名']||'';}},
   {key:'note',label:'备注',get:function(f){return f['备注']||'';}}
 ];
 function csvEscape(v){v=String(v==null?'':v);if(/[",\r\n]/.test(v)){v='"'+v.replace(/"/g,'""')+'"';}return v;}
