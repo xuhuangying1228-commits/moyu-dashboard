@@ -416,6 +416,14 @@ button:focus-visible,.btn-primary:focus-visible,.btn-ghost:focus-visible,.btn-re
 .modal-cmd code{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--accent-strong);word-break:break-all}
 .modal-note{margin-top:16px;font-size:11.5px;color:var(--muted);background:var(--accent-weak);border-radius:10px;padding:10px 12px;line-height:1.55}
 .btn-block{width:100%;display:flex;justify-content:center}
+.exp-cb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 18px;margin:6px 0 10px}
+.exp-cb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);cursor:pointer;user-select:none}
+.exp-cb input{width:14px;height:14px;cursor:pointer;accent-color:var(--accent)}
+.exp-preview{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--text);line-height:1.55;max-height:130px;overflow:auto;white-space:pre;margin:6px 0 0;word-break:break-all}
+.exp-radio{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);cursor:pointer;padding:4px 0}
+.exp-radio input{width:14px;height:14px;cursor:pointer;accent-color:var(--accent)}
+.exp-actions{display:flex;gap:8px;margin-top:14px;align-items:center}
+.exp-actions .btn-primary{flex:1}
 </style>
 <script src="https://beacon.cdn.qq.com/sdk/4.5.9/beacon_web.min.js"></script>
 <script>
@@ -888,7 +896,7 @@ body.locked{overflow:hidden;}
       
     <section class="page" id="page-influencers">
       <div class="master"><div class="sec-h"><h2><svg class="h-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>达人合作 · 经营总表</h2><span class="muted">定号 / 缺口 / 金额 / 预算 / 利润 一览 · 预算与计划数存本浏览器</span></div><div class="master-ctrl"><label>项目总预算 ¥<input id="budgetInput" type="number" inputmode="numeric" placeholder="点此填写" oninput="onBudget(this)"></label><label>计划定号数 <input id="planInput" type="number" placeholder="14" oninput="onPlan(this)"></label><span class="muted">预算/计划数仅存本浏览器，换设备需重填</span></div><div id="masterData" data-cost="43780" data-exec="46646" data-confirm="14" data-plan="14"></div><div class="sum-grid" id="masterKpi"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">已定号达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--accent)">¥46,645</div><div class="sum-l">合作金额(对客·Σ执行)</div></div><div class="sum-card"><div class="sum-v" style="color:var(--text)">¥43,780</div><div class="sum-l">实际成本(Σ下单)</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥2,865</div><div class="sum-l">代理毛利(执行−下单)</div></div><div class="sum-card"><div class="sum-v" id="masterRebateTotal" style="color:var(--accent)">—</div><div class="sum-l">返点总额</div></div><div class="sum-card"><div class="sum-v" id="masterRebateRate" style="color:var(--accent)">—</div><div class="sum-l">均返点率</div></div><div class="sum-card"><div class="sum-v" id="masterRebateRecv" style="color:var(--warn)">—</div><div class="sum-l">未回收返点</div></div><div class="sum-card"><div class="sum-v" id="masterRemain" style="color:var(--muted)">未设置</div><div class="sum-l">剩余预算(预算−执行)</div></div><div class="sum-card"><div class="sum-v" id="masterGap" style="color:var(--warn)">—</div><div class="sum-l">定号缺口(计划−已定)</div></div></div><div class="panel"><div class="panel-h"><span><svg class="ph-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>达人金额明细（按量级）</span></div><div class="panel-b" style="padding:0"><table class="tbl"><thead><tr><th>量级</th><th>人数</th><th>成本(Σ下单)</th><th>对客(Σ执行)</th></tr></thead><tbody><tr><td>尾部</td><td>7</td><td>¥23,870</td><td>¥25,432</td></tr><tr><td>KOC</td><td>4</td><td>¥15,180</td><td>¥16,173</td></tr><tr><td>素人</td><td>3</td><td>¥4,730</td><td>¥5,039</td></tr></tbody></table></div></div></div>
-      <div class="sec-h"><h2>达人明细</h2><span class="muted">多维表 + 达人配置表合并 · 14 位达人 · 每日 09:00 自动同步 · 返点/回收/项目/执行价在飞书「达人配置」表编辑（跨设备共享）</span><button class="btn-refresh" onclick="refreshFeishu()">🔄 刷新达人数据</button><button class="btn-ghost btn-sm" onclick="restoreInfs()" style="margin-left:8px">♻️ 恢复隐藏</button></div>
+      <div class="sec-h"><h2>达人明细</h2><span class="muted">多维表 + 达人配置表合并 · 14 位达人 · 每日 09:00 自动同步 · 返点/回收/项目/执行价在飞书「达人配置」表编辑（跨设备共享）</span><button class="btn-refresh" onclick="refreshFeishu()">🔄 刷新达人数据</button><button class="btn-ghost btn-sm" onclick="restoreInfs()" style="margin-left:8px">♻️ 恢复隐藏</button><button class="btn-ghost btn-sm" onclick="openExportModal()" style="margin-left:8px">📥 导出达人</button></div>
       
     <div class="inf-form card">
       <div class="inf-form-h"><span>➕ 新增 / 编辑达人</span><span class="muted">只填配置表字段 · 提交存本地草稿 · 跟我说「同步到飞书」仅补写达人配置表（不动多维表）</span></div>
@@ -1278,6 +1286,38 @@ body.locked{overflow:hidden;}
         </div>
       </div>
     </div>
+    <div class="modal-mask" id="exportInfMask" onclick="if(event.target===this)closeExportModal()">
+      <div class="modal" role="dialog" aria-modal="true" style="max-width:520px">
+        <div class="modal-h"><span>📥 导出达人明细</span><button class="modal-x" onclick="closeExportModal()" title="关闭">✕</button></div>
+        <div class="modal-b">
+          <p class="modal-p">勾选要导出的<b>字段</b>，选择达人<b>范围</b>，点「下载 CSV」即可。Excel / WPS / 飞书多维表可直接打开（已加 UTF-8 BOM）。</p>
+          <div class="modal-step"><b>① 选择字段</b><span>默认全部勾选，按需取消</span></div>
+          <div class="exp-cb-grid">
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="name" checked>达人昵称</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="home" checked>主页链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="pgy" checked>蒲公英链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="exec" checked>合作报价</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="proj" checked>合作项目</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="stage" checked>稿件进度</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="draft" checked>稿件链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="link" checked>发布链接</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="rebate" checked>返点比例</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="grp" checked>对接群名</label>
+            <label class="exp-cb"><input type="checkbox" class="exp-cb-input" data-key="note" checked>备注</label>
+          </div>
+          <div style="display:flex;gap:8px"><button class="btn-ghost btn-sm" onclick="expSelAll()">全选</button><button class="btn-ghost btn-sm" onclick="expSelNone()">全不选</button></div>
+          <div class="modal-step" style="margin-top:14px"><b>② 选择达人范围</b></div>
+          <label class="exp-radio"><input type="radio" name="expScope" value="visible" checked>当前可见（<span id="expCountVisible">0</span> 位）</label>
+          <label class="exp-radio"><input type="radio" name="expScope" value="all">全部（含已隐藏，共 <span id="expCountAll">0</span> 位）</label>
+          <div class="modal-step" style="margin-top:14px"><b>③ 预览</b><span>前 2 行示例</span></div>
+          <pre id="expPreview" class="exp-preview">（请勾选字段）</pre>
+          <div class="exp-actions">
+            <button class="btn-ghost btn-sm" onclick="closeExportModal()">取消</button>
+            <button class="btn-primary btn-sm" onclick="exportInfCsv()">📥 下载 CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -1362,6 +1402,56 @@ function refreshFeishu(){var t=document.getElementById('feishuCmdText');if(t)t.t
 function closeFeishuModal(){var m=document.getElementById('feishuMask');if(m)m.classList.remove('show');}
 function copyFeishuCmd(){var t=document.getElementById('feishuCmdText');if(t)copyText(t.textContent);toast('已复制刷新命令');}
 function reapplyLocal(){applyOV();document.querySelectorAll('tr.inf-row').forEach(function(tr){var n=tr.getAttribute('data-nick');if(n)genGroup(n);});toast('已重新应用本机修改');closeFeishuModal();}
+// ===== 达人明细导出 =====
+var EXPORT_COLS=[
+  {key:'name',label:'达人昵称',get:function(tr){var n=tr.querySelector('.inf-name');return n?n.textContent.trim():(tr.dataset.nick||'');}},
+  {key:'home',label:'主页链接',get:function(tr){var i=tr.querySelector('.home-input');return i?i.value:'';}},
+  {key:'pgy',label:'蒲公英链接',get:function(tr){var i=tr.querySelector('.pgy-input');return i?i.value:'';}},
+  {key:'exec',label:'合作报价',get:function(tr){var i=tr.querySelector('.exec-input');var c=tr.querySelector('.inf-cost');if(!i)return '';var v=i.value;if(c){var n=(c.textContent||'').replace(/[^\d.]/g,'');if(n)v+=' / 成本¥'+n;}return v;}},
+  {key:'proj',label:'合作项目',get:function(tr){var i=tr.querySelector('.proj-input');return i?i.value:'';}},
+  {key:'stage',label:'稿件进度',get:function(tr){var i=tr.querySelector('.stage-input');return i?i.value:'';}},
+  {key:'draft',label:'稿件链接',get:function(tr){var i=tr.querySelector('.draft-input');return i?i.value:'';}},
+  {key:'link',label:'发布链接',get:function(tr){var i=tr.querySelector('.link-input');return i?i.value:'';}},
+  {key:'rebate',label:'返点比例',get:function(tr){var i=tr.querySelector('.reb-input');return i?i.value:'';}},
+  {key:'grp',label:'对接群名',get:function(tr){var s=tr.querySelector('.grp-name');return s?s.textContent.trim():'';}},
+  {key:'note',label:'备注',get:function(tr){var i=tr.querySelector('.note-input');return i?i.value:'';}}
+];
+function csvEscape(v){v=String(v==null?'':v);if(/[",\r\n]/.test(v)){v='"'+v.replace(/"/g,'""')+'"';}return v;}
+function csvDownload(content,filename){var blob=new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);}
+function expSelAll(){document.querySelectorAll('.exp-cb-input').forEach(function(c){c.checked=true;});updateExpPreview();}
+function expSelNone(){document.querySelectorAll('.exp-cb-input').forEach(function(c){c.checked=false;});updateExpPreview();}
+function getExpSelectedCols(){return EXPORT_COLS.filter(function(c){var cb=document.querySelector('.exp-cb-input[data-key="'+c.key+'"]');return cb&&cb.checked;});}
+function getExpRows(){var sc=document.querySelector('input[name=expScope]:checked');var all=Array.from(document.querySelectorAll('tr.inf-row'));var vis=all.filter(function(tr){return tr.style.display!=='none';});return sc&&sc.value==='all'?all:vis;}
+function updateExpPreview(){
+  var cols=getExpSelectedCols();
+  var rows=getExpRows();
+  var visN=Array.from(document.querySelectorAll('tr.inf-row')).filter(function(tr){return tr.style.display!=='none';}).length;
+  var allN=document.querySelectorAll('tr.inf-row').length;
+  var cv=document.getElementById('expCountVisible');if(cv)cv.textContent=visN;
+  var ca=document.getElementById('expCountAll');if(ca)ca.textContent=allN;
+  var pv=document.getElementById('expPreview');if(!pv)return;
+  if(!cols.length){pv.textContent='（请至少勾选一个字段）';return;}
+  if(!rows.length){pv.textContent='（当前范围内没有达人）';return;}
+  var lines=[cols.map(function(c){return c.label;}).join(' | ')];
+  rows.slice(0,2).forEach(function(tr){lines.push(cols.map(function(c){var v=c.get(tr);return v.length>26?v.slice(0,24)+'…':v;}).join(' | '));});
+  if(rows.length>2)lines.push('… 还有 '+(rows.length-2)+' 行未显示');
+  pv.textContent=lines.join('\n');
+}
+function openExportModal(){var m=document.getElementById('exportInfMask');if(m){updateExpPreview();m.classList.add('show');}}
+function closeExportModal(){var m=document.getElementById('exportInfMask');if(m)m.classList.remove('show');}
+function exportInfCsv(){
+  var cols=getExpSelectedCols();var rows=getExpRows();
+  if(!cols.length){toast('请至少勾选一个字段');return;}
+  if(!rows.length){toast('当前范围内没有达人');return;}
+  var lines=[cols.map(function(c){return csvEscape(c.label);}).join(',')];
+  rows.forEach(function(tr){lines.push(cols.map(function(c){return csvEscape(c.get(tr));}).join(','));});
+  var d=new Date(),p=function(n){return n<10?'0'+n:n;};
+  var stamp=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+'-'+p(d.getMinutes());
+  csvDownload(lines.join('\r\n'),'达人明细_'+stamp+'.csv');
+  toast('已导出 '+rows.length+' 位达人 · '+cols.length+' 个字段');
+  closeExportModal();
+}
+document.addEventListener('change',function(e){if(e.target&&(e.target.classList.contains('exp-cb-input')||e.target.name==='expScope'))updateExpPreview();});
 // ===== S1 学视机 Brief 数据（来自品牌 Brief PDF 0706）=====
 var S1_DIR={
  '高知妈妈体验分享':{
@@ -1714,7 +1804,7 @@ function genInvite(){
   L.push('备注：'+(note||''));
   L.push('');
   L.push('可以合作请同步以下信息');
-  L.push('1.报备返点（40%以上有限提报）：');
+  L.push('1.报备返点（40%以上优先提报）：');
   L.push('2.报价：');
   L.push('3.档期（最快可执行档期）：');
   L.push('4.授权范围：信息流授权、品牌官方（电商+非电商）使用等（永久免费，如有收费项目请告知）:');
