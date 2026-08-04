@@ -140,8 +140,9 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--accent-weak);
 .inf-input:hover{border-color:var(--border)}
 .inf-input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 2px rgba(0,102,204,.12)}
 .inf-input[type=number]{text-align:right}
-.inf-c-group{display:flex;align-items:center;gap:6px;padding:6px 8px !important;max-width:280px}
-.inf-c-group .grp-name{flex:1;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace}
+.inf-c-group{display:flex;align-items:center;flex-wrap:nowrap;gap:6px;padding:6px 8px !important;max-width:280px;min-width:0;overflow:hidden}
+.inf-c-group .grp-name{flex:1 1 auto;min-width:0;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace}
+.inf-c-group .inf-input{flex:1 1 auto;min-width:0}
 .inf-c-group .grp-copy{padding:3px 8px !important;font-size:11px !important;border-radius:6px;flex-shrink:0}
 .inf-c-act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:88px;padding:8px 6px !important}
 .inf-c-act .inf-del{width:24px;height:24px;padding:0}
@@ -1171,10 +1172,10 @@ var INF_SCHEMA=[
   {key:'主页链接',    label:'主页',     type:'link'},
   {key:'蒲公英链接',  label:'蒲公英',   type:'link'},
   {key:'达人报价',    label:'合作报价', type:'text'},
-  {key:'合作项目',    label:'所属项目', type:'input', persistKey:'proj',   inputType:'text',   placeholder:'自由补充（不读飞书）'},
+  {key:'合作项目',    label:'所属项目', type:'input', persistKey:'proj',   inputType:'text',   placeholder:'自由补充', baseKey:'proj'},
   {key:'__exec__',   label:'执行金额', type:'input', persistKey:'exec',   inputType:'number', placeholder:'¥', feishuKey:'执行价格（加10%平台服务费+5%服务费+小红星2%服务费）'},
-  {key:'返点比例',    label:'返点%',   type:'input', persistKey:'rebate', inputType:'number', placeholder:'自由补充（不读飞书）'},
-  {key:'__recv__',   label:'回收',     type:'input', persistKey:'recv',   inputType:'text',   placeholder:'已/未/金额'},
+  {key:'返点比例',    label:'返点%',   type:'input', persistKey:'rebate', inputType:'number', placeholder:'%', baseKey:'reb'},
+  {key:'__recv__',   label:'回收',     type:'input', persistKey:'recv',   inputType:'text',   placeholder:'已/未回收', baseKey:'recv'},
   {key:'稿件链接',    label:'稿件',     type:'link'},
   {key:'稿件进度',    label:'稿件进度', type:'text'},
   {key:'笔记链接',    label:'发布',     type:'link'},
@@ -1231,6 +1232,34 @@ function nzVal(v){
   if(s==='')return false;
   return ['-','—','–','无','/','N/A','n/a','待定','null','undefined'].indexOf(s)<0;
 }
+/* ===== 返点基准表 =====
+   来源：飞书电子表格《达人返点登记》
+        https://qcnqvincnixn.feishu.cn/sheets/H5PnsX0VWh6HTytzhe3cOtnOnnd  (Sheet1)
+   同步时间：2026-08-04   共 19 位达人
+   字段：deal=合作金额(¥,达人裸报价，与多维表「达人报价」一致) / reb=返点% / recv=回收状态 / proj=所属项目
+   优先级：本机手改(localStorage override) > 本表 > 飞书多维表 > 0
+   注意：手动同步。返点表改动后需重新同步本表（或改用自动同步脚本）。          */
+var REBATE_BASE={
+"可乐同学upup":{deal:2200,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"熠妈在成长✨":{deal:2200,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"大云姐育儿日记":{deal:2800,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"若伊可爱多":{deal:3000,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"早安波妞🍭":{deal:4000,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"冉冉和甜甜":{deal:3500,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"Jayden🌽":{deal:1500,reb:25,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"柒柒在努力(备孕中)":{deal:1800,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"点点和哼哼的麻麻":{deal:2500,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"目里日志":{deal:3000,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"芊语芊浔吖":{deal:4000,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"可可妈咪Suzy🌾":{deal:3500,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"Elphie元气沁沁子":{deal:1400,reb:20,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"超人妈妈vlog":{deal:4000,reb:25,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"栩小安妈咪呀":{deal:3300,reb:35,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"超大只的妮妮":{deal:1800,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"一颗甜橙🍊":{deal:1500,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"🐰夕布小开心":{deal:1000,reb:20,recv:"未回收",proj:"8月-大脸书瞳S1"},
+"两小只的妈咪吖💋、":{deal:3000,reb:30,recv:"未回收",proj:"8月-大脸书瞳S1"}
+};
 function rebuildInfData(){
   window.INF_DATA=[];
   var ov=getOverrides();
@@ -1239,9 +1268,15 @@ function rebuildInfData(){
     var o=ov[nick]||{};
     // 执行金额/返点/回收/项目 优先用本机覆盖，否则回退飞书烘焙值
     var execNum=o.exec!==undefined&&o.exec!==''?parseFloat(o.exec):(parseFloat(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）'])||0);
-    var rebNum=o.rebate!==undefined&&o.rebate!==''?parseFloat(o.rebate):0;
-    var recvStr=o.recv!==undefined&&o.recv!==''?o.recv:'未回收';
-    var projStr=o.proj!==undefined?o.proj:'';
+    // ---- 返点：合作金额 / 返点% / 回收状态 ----
+    // 基准来自飞书《达人返点登记》表；本机手改优先；再退飞书多维表「达人报价」
+    var rb=REBATE_BASE[nick]||{};
+    var dealNum=o.deal!==undefined&&o.deal!==''?parseFloat(o.deal)
+               :(rb.deal!==undefined?rb.deal:(parseFloat(f['达人报价'])||0));
+    var rebNum=o.rebate!==undefined&&o.rebate!==''?parseFloat(o.rebate)
+              :(rb.reb!==undefined?rb.reb:0);
+    var recvStr=o.recv!==undefined&&o.recv!==''?o.recv:(rb.recv||'未回收');
+    var projStr=o.proj!==undefined?o.proj:(rb.proj||'');
     // ---- 已定号 / 在跟进 判定 ----
     // 口径（2026-08-04 确认）：
     //   已定号 = 已确认执行合作。优先读飞书「建联进度」=="可以接单"；
@@ -1263,6 +1298,7 @@ function rebuildInfData(){
       nick:nick,
       tier:f['达人量级']||'', fans:f['粉丝数（w）']||'',
       exec:execNum, cost:parseFloat(f['下单价格（含10%蒲公英下单费）'])||0,
+      deal:dealNum,
       prog:jdprog, pct:0, risk:'normal',
       rebate:rebNum, recv:recvStr,
       proj:projStr, projects:projStr?[projStr]:[],
@@ -1298,6 +1334,7 @@ function renderInf(){
         var initVal;
         if(o[col.persistKey]!==undefined){ initVal=o[col.persistKey]; }
         else if(col.autoGen){ initVal=genGroupName(f,nick); }
+        else if(col.baseKey){ var _rb=REBATE_BASE[nick]||{}; initVal=(_rb[col.baseKey]!==undefined&&_rb[col.baseKey]!==null)?_rb[col.baseKey]:''; }
         else if(col.feishuKey){ initVal=f[col.feishuKey]||''; }
         else { initVal=''; }
         var inp=document.createElement('input');
@@ -1353,7 +1390,7 @@ function loadFeishuCells(){
   }).catch(function(){toast('飞书数据加载失败，请稍后重试');});
 }
 document.addEventListener('DOMContentLoaded',function(){loadFeishuCells();});
-function renderProjInf(i){var box=document.getElementById('pdinf-'+i);if(!box)return;var proj=PNAMES[i];var list=INF_DATA.filter(function(d){return getProj(d.nick)===proj;});if(!list.length){box.innerHTML='<div class="muted">该项目暂未关联达人。去「达人合作」页给达人选择所属项目即可关联。</div>';return;}var html='<table class="tbl inf-mini"><thead><tr><th>达人</th><th>量级</th><th>进度</th><th>执行价</th><th>返点</th><th>回收</th><th></th></tr></thead><tbody>';var treb=0,texec=0;list.forEach(function(d){var pct=d.rebate||0;var amt=d.exec*pct/100;if(pct>0){treb+=amt;texec+=d.exec;}var recv=d.recv==='已回收'?'✅':'—';html+='<tr><td>'+esc(d.nick)+'</td><td>'+esc(d.tier)+'</td><td>'+esc(d.prog)+'</td><td>¥'+Math.round(d.exec).toLocaleString('zh-CN')+'</td><td>'+(pct>0?(pct+'% · ¥'+Math.round(amt).toLocaleString('zh-CN')):'—')+'</td><td>'+recv+'</td><td><a class="link-btn j-detail" data-nick="'+esc(d.nick)+'">详情 →</a></td></tr>';});html+='</tbody></table><div class="muted" style="margin-top:8px">本项目关联 '+list.length+' 位达人 · 返点总额 ¥'+Math.round(treb).toLocaleString('zh-CN')+' · 整体返点率 '+(texec>0?(treb/texec*100).toFixed(1):'0')+'%</div>';box.innerHTML=html;}
+function renderProjInf(i){var box=document.getElementById('pdinf-'+i);if(!box)return;var proj=PNAMES[i];var list=INF_DATA.filter(function(d){return getProj(d.nick)===proj;});if(!list.length){box.innerHTML='<div class="muted">该项目暂未关联达人。去「达人合作」页给达人选择所属项目即可关联。</div>';return;}var html='<table class="tbl inf-mini"><thead><tr><th>达人</th><th>量级</th><th>进度</th><th>合作金额</th><th>返点</th><th>回收</th><th></th></tr></thead><tbody>';var treb=0,texec=0;list.forEach(function(d){var pct=d.rebate||0;var base=d.deal||d.exec||0;var amt=base*pct/100;if(pct>0){treb+=amt;texec+=base;}var recv=d.recv==='已回收'?'✅':'—';html+='<tr><td>'+esc(d.nick)+'</td><td>'+esc(d.tier)+'</td><td>'+esc(d.prog)+'</td><td>¥'+Math.round(base).toLocaleString('zh-CN')+'</td><td>'+(pct>0?(pct+'% · ¥'+Math.round(amt).toLocaleString('zh-CN')):'—')+'</td><td>'+recv+'</td><td><a class="link-btn j-detail" data-nick="'+esc(d.nick)+'">详情 →</a></td></tr>';});html+='</tbody></table><div class="muted" style="margin-top:8px">本项目关联 '+list.length+' 位达人 · 返点总额 ¥'+Math.round(treb).toLocaleString('zh-CN')+' · 整体返点率 '+(texec>0?(treb/texec*100).toFixed(1):'0')+'%</div>';box.innerHTML=html;}
 function gotoInf(nick){go('influencers');setTimeout(function(){document.querySelectorAll('.inf-row').forEach(function(tr){if(tr.getAttribute('data-nick')===nick){tr.classList.add('row-hl');tr.scrollIntoView({behavior:'smooth',block:'center'});}});},80);}
 function editInf(nick){var d=InfByNick(nick);if(!d){toast('未找到达人数据');return;}go('influencers');setTimeout(function(){var f=document.getElementById('if_nick');if(f)f.value=d.nick||'';var p=document.getElementById('if_price');if(p)p.value=d.exec?Math.round(d.exec/1.157):'';var r=document.getElementById('if_reb');if(r)r.value=d.rebate||'';var rv=document.getElementById('if_recv');if(rv)rv.value=d.recv||'';var chks=document.querySelectorAll('[name=if_proj]');chks.forEach(function(c){c.checked=(d.projects||[]).indexOf(c.value)>=0;});var n=document.getElementById('if_note');if(n)n.value=d.note||'';window.scrollTo({top:0,behavior:'smooth'});toast('已加载「'+nick+'」的信息，修改后点提交保存');},120);}
 function delInf(nick){if(!confirm('确认隐藏达人「'+nick+'」？\n仅本地隐藏显示，不删飞书数据；可在上方「恢复隐藏」找回。'))return;var hidden=getHiddenSet();hidden.add(nick);localStorage.setItem('mf_hidden_infs',JSON.stringify(Array.from(hidden)));renderInf();toast('已隐藏「'+nick+'」');}
@@ -1379,10 +1416,10 @@ var EXPORT_COLS=[
   {key:'home',   label:'主页',     get:function(f){return f['主页链接']||'';}},
   {key:'pgy',    label:'蒲公英',   get:function(f){return f['蒲公英链接']||'';}},
   {key:'price',  label:'合作报价', get:function(f){return f['达人报价']||'';}},
-  {key:'proj',   label:'所属项目', get:function(f){var o=getOverrides()[f.nick]||{};return o.proj!==undefined?o.proj:'';}},
+  {key:'proj',   label:'所属项目', get:function(f){var o=getOverrides()[f.nick]||{},b=REBATE_BASE[f.nick]||{};return o.proj!==undefined?o.proj:(b.proj||'');}},
   {key:'exec',   label:'执行金额', get:function(f){var o=getOverrides()[f.nick]||{};return o.exec!==undefined?o.exec:(f['执行价格（加10%平台服务费+5%服务费+小红星2%服务费）']||'');}},
-  {key:'rebate', label:'返点%',   get:function(f){var o=getOverrides()[f.nick]||{};return o.rebate!==undefined?o.rebate:'';}},
-  {key:'recv',   label:'回收',     get:function(f){var o=getOverrides()[f.nick]||{};return o.recv!==undefined?o.recv:'';}},
+  {key:'rebate', label:'返点%',   get:function(f){var o=getOverrides()[f.nick]||{},b=REBATE_BASE[f.nick]||{};return o.rebate!==undefined?o.rebate:(b.reb!==undefined?b.reb:'');}},
+  {key:'recv',   label:'回收',     get:function(f){var o=getOverrides()[f.nick]||{},b=REBATE_BASE[f.nick]||{};return o.recv!==undefined?o.recv:(b.recv||'');}},
   {key:'draft',  label:'稿件',     get:function(f){return f['稿件链接']||'';}},
   {key:'stage',  label:'稿件进度', get:function(f){return f['稿件进度']||'';}},
   {key:'publish',label:'发布',     get:function(f){return f['笔记链接']||'';}},
@@ -1722,11 +1759,12 @@ function applyMaster(){
   var pf=document.getElementById('masterProg'); if(pf)pf.style.width=pct+'%';
   var pt=document.getElementById('masterProgTxt'); if(pt)pt.textContent=pct+'%';
   var ptxt=document.getElementById('planTxt'); if(ptxt)ptxt.textContent=plan;
-  // === 返点（保留原逻辑）===
-  var totalRebate=0,recvRebate=0,unrecvRebate=0;
-  INF_DATA.forEach(function(d){var ex=d.exec||0;var pct=d.rebate||0;if(pct>0){var amt=ex*pct/100;totalRebate+=amt;if(d.recv==='已回收')recvRebate+=amt;else unrecvRebate+=amt;}});
+  // === 返点 ===
+  // 基数 = 合作金额 deal（达人裸报价，来自飞书返点登记表）；执行价含服务费，不作返点基数
+  var totalRebate=0,recvRebate=0,unrecvRebate=0,dealAll=0;
+  INF_DATA.forEach(function(d){var base=d.deal||d.exec||0;var pct=d.rebate||0;if(pct>0){dealAll+=base;var amt=base*pct/100;totalRebate+=amt;if(d.recv==='已回收')recvRebate+=amt;else unrecvRebate+=amt;}});
   var rt=document.getElementById('masterRebateTotal');if(rt)rt.textContent=fmtMoney(totalRebate);
-  var rr=document.getElementById('masterRebateRate');if(rr)rr.textContent=(execAll>0?(totalRebate/execAll*100).toFixed(1):'0')+'%';
+  var rr=document.getElementById('masterRebateRate');if(rr)rr.textContent=(dealAll>0?(totalRebate/dealAll*100).toFixed(1):'0')+'%';
   var rrec=document.getElementById('masterRebateRecv');if(rrec)rrec.textContent=fmtMoney(unrecvRebate);
   // 达人明细上方 4 个 KPI 卡片（严重逾期/需关注已隐藏）
   paint('infFollowCount', followCount, 'var(--accent)');
