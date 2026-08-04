@@ -938,7 +938,7 @@ body.locked{overflow:hidden;}
         <span id="ifMsg" class="muted"></span>
       </div>
     </div>
-      <div class="sum-grid"><div class="sum-card"><div class="sum-v" style="color:var(--accent)">14</div><div class="sum-l">在跟进达人</div></div><div class="sum-card"><div class="sum-v" style="color:var(--danger)">2</div><div class="sum-l">严重逾期</div></div><div class="sum-card"><div class="sum-v" style="color:var(--warn)">6</div><div class="sum-l">需关注</div></div><div class="sum-card"><div class="sum-v" style="color:var(--ok)">¥46645</div><div class="sum-l">报价合计</div></div></div>
+      <div class="sum-grid"><div class="sum-card"><div class="sum-v" id="infFollowCount" style="color:var(--accent)">—</div><div class="sum-l">在跟进达人</div></div><div class="sum-card" style="display:none"><div class="sum-v" id="infOverdueCount" style="color:var(--danger)">—</div><div class="sum-l">严重逾期</div></div><div class="sum-card" style="display:none"><div class="sum-v" id="infWatchCount" style="color:var(--warn)">—</div><div class="sum-l">需关注</div></div><div class="sum-card"><div class="sum-v" id="infQuoteSum" style="color:var(--ok)">—</div><div class="sum-l">报价合计</div></div></div>
       <!-- 飞书为唯一数据源，项目筛选暂隐（合作项目列补齐到飞书后可启用） -->
       <div class="inf-wrap"><table class="inf-table">
         <thead><tr><th>达人昵称</th><th>主页</th><th>蒲公英</th><th>合作报价</th><th>所属项目</th><th>执行金额</th><th>返点%</th><th>回收</th><th>稿件</th><th>稿件进度</th><th>发布</th><th>对接群名</th><th>备注</th><th>操作</th></tr></thead>
@@ -1224,6 +1224,13 @@ function genGroupName(f,nick){
   return (date||'档期待定')+'-'+nick+'-'+dir+'-'+nt;
 }
 function getHiddenSet(){try{return new Set(JSON.parse(localStorage.getItem('mf_hidden_infs')||'[]'));}catch(e){return new Set();}}
+// 字段非空判定：空串/占位符/null 一律视为空
+function nzVal(v){
+  if(v===null||v===undefined)return false;
+  var s=String(v).trim();
+  if(s==='')return false;
+  return ['-','—','–','无','/','N/A','n/a','待定','null','undefined'].indexOf(s)<0;
+}
 function rebuildInfData(){
   window.INF_DATA=[];
   var ov=getOverrides();
@@ -1235,13 +1242,31 @@ function rebuildInfData(){
     var rebNum=o.rebate!==undefined&&o.rebate!==''?parseFloat(o.rebate):0;
     var recvStr=o.recv!==undefined&&o.recv!==''?o.recv:'未回收';
     var projStr=o.proj!==undefined?o.proj:'';
+    // ---- 已定号 / 在跟进 判定 ----
+    // 口径（2026-08-04 确认）：
+    //   已定号 = 已确认执行合作。优先读飞书「建联进度」=="可以接单"；
+    //            该字段缺失时，用执行类字段兜底：发布档期/寄品进度/稿件进度 任一非空
+    //            （依据：这三个字段仅在定号后才录入，实测 18/19 集合完全重合；
+    //             而报价/执行价/下单价 19/19 全满，属建联阶段信息，不可用于判定）
+    //   在跟进 = 已定号 且 稿件进度 ∉ {已发布, 已定稿}
+    var jdprog=f['稿件进度']||'';
+    var jlprog=f['建联进度']||'';
+    var confirmed;
+    if(nzVal(jlprog)){
+      confirmed = (String(jlprog).indexOf('可以接单')>=0);
+    }else{
+      confirmed = nzVal(jdprog) || nzVal(f['寄品进度']) || nzVal(f['发布档期']);
+    }
+    var jdDone = (jdprog==='已发布' || jdprog==='已定稿');
+    var inFollow = confirmed && !jdDone;
     window.INF_DATA.push({
       nick:nick,
       tier:f['达人量级']||'', fans:f['粉丝数（w）']||'',
       exec:execNum, cost:parseFloat(f['下单价格（含10%蒲公英下单费）'])||0,
-      prog:f['稿件进度']||'未开始', pct:0, risk:'normal',
+      prog:jdprog, pct:0, risk:'normal',
       rebate:rebNum, recv:recvStr,
-      proj:projStr, projects:projStr?[projStr]:[]
+      proj:projStr, projects:projStr?[projStr]:[],
+      inFollow:inFollow, confirmed:confirmed
     });
   });
 }
@@ -1660,13 +1685,15 @@ function fmtYuan(n){return '¥'+Math.round(n).toLocaleString('zh-CN');}
 function applyMaster(){
   var md=document.getElementById('masterData'); if(!md)return;
   // === KPI 4 大数字全部从 INF_DATA 计算（不再依赖写死的 data-attr）===
-  // 已定号 = 用户在工作台给该达人填了「所属项目」(d.proj 非空)
-  // Σ执行 / Σ下单 = 19 位达人执行价/下单价合计
-  var execAll=0,costAll=0,confirmCount=0;
+  // 已定号 = 已确认执行合作（建联进度=="可以接单"，缺失时用 档期/寄品/稿件 任一非空兜底）
+  // 在跟进 = 已定号 且 稿件进度 ∉ {已发布, 已定稿}
+  // Σ执行 / Σ下单 = 全部达人执行价/下单价合计
+  var execAll=0,costAll=0,confirmCount=0,followCount=0;
   INF_DATA.forEach(function(d){
     execAll += d.exec||0;
     costAll += d.cost||0;
-    if(d.proj)confirmCount++;
+    if(d.confirmed)confirmCount++;
+    if(d.inFollow)followCount++;
   });
   var exec=execAll, cost=costAll, confirm=confirmCount;
   var planDef=+md.dataset.plan||14;
@@ -1701,6 +1728,9 @@ function applyMaster(){
   var rt=document.getElementById('masterRebateTotal');if(rt)rt.textContent=fmtMoney(totalRebate);
   var rr=document.getElementById('masterRebateRate');if(rr)rr.textContent=(execAll>0?(totalRebate/execAll*100).toFixed(1):'0')+'%';
   var rrec=document.getElementById('masterRebateRecv');if(rrec)rrec.textContent=fmtMoney(unrecvRebate);
+  // 达人明细上方 4 个 KPI 卡片（严重逾期/需关注已隐藏）
+  paint('infFollowCount', followCount, 'var(--accent)');
+  paint('infQuoteSum',    fmtYuan(execAll), 'var(--ok)');
 }
 function onBudget(inp){var m=loadMaster();m.budget=inp.value!==''?parseFloat(inp.value):null;localStorage.setItem('mf_master',JSON.stringify(m));applyMaster();}
 function onPlan(inp){var m=loadMaster();m.plan=inp.value!==''?parseInt(inp.value):null;localStorage.setItem('mf_master',JSON.stringify(m));applyMaster();}
